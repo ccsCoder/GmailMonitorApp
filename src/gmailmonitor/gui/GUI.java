@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package gmailmonitor;
+package gmailmonitor.gui;
 
 import gmailmonitor.utils.PropertyFileWriter;
 import java.awt.AWTException;
@@ -28,11 +28,13 @@ public class GUI extends javax.swing.JFrame {
     private boolean isValid = true;
     private SystemTray tray;
     private TrayIcon trayIcon;
+    private NotificationPopup notifier;
     /**
      * Creates new form GUI
      */
     public GUI() {
         initComponents();
+        notifier= new NotificationPopup();
     }
 
     /**
@@ -313,6 +315,8 @@ public class GUI extends javax.swing.JFrame {
                 } else {
                     JOptionPane.showMessageDialog(null, "Please take a moment to configure the app.", "First Launch", JOptionPane.INFORMATION_MESSAGE);
                 }
+                
+//                notifier.showPopup("We are Monitoring your mails...! ");
                 
             }
         });
