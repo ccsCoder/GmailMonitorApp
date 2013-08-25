@@ -4,6 +4,7 @@
  */
 package gmailmonitor;
 
+import gmailmonitor.utils.PropertyFileWriter;
 import java.util.Timer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,10 +16,14 @@ import java.util.regex.Pattern;
 public class GmailMonitorDriver {
     public static void main(String[] args) {
         Timer monitoringTimer = new Timer("GmailMonitorTimer");
-        String host="imap.gmail.com";
-        String userName="ccsCoder";
-        String password="gfgzfwonzexruvkh";
-        String folder="Inbox";
+//        String host="imap.gmail.com";
+        String host=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("host");
+        String userName=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username");
+//        String userName="ccsCoder";
+        String password=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password");
+//        String password="gfgzfwonzexruvkh";
+        String folder=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("folder");
+//        String folder="Inbox";
         //Create the task
         Monitor gmailTimerTask = new Monitor(host,userName,password,folder);
         if(gmailTimerTask.startMonitor()==false) {

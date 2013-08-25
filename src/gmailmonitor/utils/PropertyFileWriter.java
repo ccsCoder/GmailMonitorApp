@@ -23,7 +23,7 @@ public class PropertyFileWriter {
             //propFile= new File(System.getProperty("user.dir")+File.separator+PROPERTY_FILE_NAME);
             
             //System.out.println("File read from:"+propFile.getAbsolutePath().toString());
-            CONNECTION_PROPERTIES.load(PropertyFileWriter.class.getResourceAsStream("/resources/connections.properties"));
+            CONNECTION_PROPERTIES.load(PropertyFileWriter.class.getResourceAsStream("/resources/configuration.properties"));
         } catch (IOException ex) {
             System.out.println("OOPS!"+ex.getMessage());
         }
@@ -33,7 +33,7 @@ public class PropertyFileWriter {
         try {
             CONNECTION_PROPERTIES.setProperty(propertyName, propertyValue);
             //PropertyFileWriter.class.getResource("/resources/connections.properties").
-            CONNECTION_PROPERTIES.store(new FileOutputStream(PropertyFileWriter.class.getResource("/resources/connections.properties").getFile()), null);
+            CONNECTION_PROPERTIES.store(new FileOutputStream(PropertyFileWriter.class.getResource("/resources/configuration.properties").getFile()), null);
             System.out.println("Successfully Saved to property file:"+propertyName+" - "+propertyValue);
         } catch (Exception ex) {
             System.out.println("OOPS!"+ex.getMessage());

@@ -20,11 +20,12 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
- *
+ * 
  * @author CodeBeast
  */
 public class GUI extends javax.swing.JFrame {
-    private boolean isValid=true;
+
+    private boolean isValid = true;
     private SystemTray tray;
     private TrayIcon trayIcon;
     /**
@@ -69,17 +70,22 @@ public class GUI extends javax.swing.JFrame {
 
         jLabel2.setText("Username:");
 
+        jTextUsername.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username"));
+
         jHostCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "gMail", "Yahoo!" }));
 
         jLabel3.setText("Password:");
 
+        jPassword1.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password"));
         jPassword1.setToolTipText("<html>\n\t<strong>Enter your App specific password </strong>\n</html>");
 
         jLabel6.setText("Folder to Monitor:");
 
-        jTextInboxName.setText("Inbox");
+        jTextInboxName.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("folder"));
 
         jLabel7.setText("Confirm Password:");
+
+        jPassword2.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password"));
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -220,36 +226,36 @@ public class GUI extends javax.swing.JFrame {
     private void jSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSaveButtonActionPerformed
         try {
             // TODO add your handling code here:
-            
-            if (this.jTextUsername.getText().trim().length()==0) {
+
+            if (this.jTextUsername.getText().trim().length() == 0) {
                 JOptionPane.showMessageDialog(null, "Please Provide a User Name", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (this.jPassword1.getPassword().length==0) {
+            if (this.jPassword1.getPassword().length == 0) {
                 JOptionPane.showMessageDialog(null, "Cannot leave Password field Empty!", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             if (!Arrays.equals(this.jPassword1.getPassword(), this.jPassword2.getPassword())) {
                 JOptionPane.showMessageDialog(null, "Both Passwords Do Not Match!", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
-            if (this.jTextInboxName.getText().trim().length()==0) {
+
+            if (this.jTextInboxName.getText().trim().length() == 0) {
                 JOptionPane.showMessageDialog(null, "Please Provide a Folder to Monitor", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            
+
             //If I reach here, it means, validations have passed.
             JOptionPane.showMessageDialog(null, "Provide your Application Specific Password if you have enabled 2 Step Verification "
                     + "for you Google Account.\nhttps://support.google.com/accounts/answer/185833?hl=en",
                     "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
-           //Now persist the things in properties file.
-            PropertyFileWriter.writeToPropertyFile("host", this.jHostCombo.getSelectedItem().toString().equals("gMail")?"imap.gmail.com":"imap.yahoo.com");
+            //Now persist the things in properties file.
+            PropertyFileWriter.writeToPropertyFile("host", this.jHostCombo.getSelectedItem().toString().equals("gMail") ? "imap.gmail.com" : "imap.yahoo.com");
             PropertyFileWriter.writeToPropertyFile("username", this.jTextUsername.getText());
             PropertyFileWriter.writeToPropertyFile("password", new String(this.jPassword1.getPassword()));
             PropertyFileWriter.writeToPropertyFile("folder", this.jTextInboxName.getText());
-            
+
             JOptionPane.showMessageDialog(null, "Saved Configuration. \n Application will keep running from your System Tray.",
                     "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
             this.initSystemTray();
@@ -285,14 +291,8 @@ public class GUI extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GUI.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            //swallow this
         }
         //</editor-fold>
 
@@ -300,7 +300,20 @@ public class GUI extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
-                new GUI().setVisible(true);
+                GUI gui = new GUI();
+                gui.setVisible(true);
+                if (!gui.checkFirstTimeHit()) {
+                    try {
+                        System.out.println("Not first hit");
+                        //if returning to the app, go to SysTray Directly.
+                        gui.initSystemTray();
+                    } catch (AWTException ex) {
+                        System.out.println("OOPS! Cannot init System Tray");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please take a moment to configure the app.", "First Launch", JOptionPane.INFORMATION_MESSAGE);
+                }
+                
             }
         });
     }
@@ -324,42 +337,54 @@ public class GUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void initSystemTray() throws AWTException {
-            
-        if ( SystemTray.isSupported()==true)
-        {    
+
+        if (SystemTray.isSupported() == true) {
             tray = SystemTray.getSystemTray();
             Image image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/Icon.gif"));
-            trayIcon = new TrayIcon(image,"gMail MOnitor",this.createPopupMenuForTray());
+            trayIcon = new TrayIcon(image, "gMail MOnitor", this.createPopupMenuForTray());
 //            this.addPopupMenuToTray(tray,trayIcon);
             //add to tray
             tray.add(trayIcon);
             //make that form invisible
             this.setVisible(false);
 
-        }
-        else
+        } else {
             System.out.println("\nSystemTray not supported!!!");
         }
+    }
 
     private PopupMenu createPopupMenuForTray() {
         PopupMenu popup = new PopupMenu();
-        MenuItem item1=new MenuItem("Configuration");
-        MenuItem item2=new MenuItem("Exit! (Stop Monitoring and Calling)");
+        MenuItem item1 = new MenuItem("Configuration");
+        MenuItem item2 = new MenuItem("Exit! (Stop Monitoring and Calling)");
         popup.add(item1);
         popup.add(item2);
         item1.addActionListener(new ActionListener() {
-        //trayIcon.setPopupMenu(popup);
+            //trayIcon.setPopupMenu(popup);
             @Override
             public void actionPerformed(ActionEvent e) {
                 GUI.this.setVisible(true);
                 tray.remove(trayIcon);
             }
-
-            
+        });
+        item2.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (JOptionPane.showConfirmDialog(null, "Are you sure you want to Exit?", "Whoa!", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    tray.remove(trayIcon);
+                    System.exit(0);
+                }
+            }
         });
         return popup;
-       
+
     }
-        
-    
+
+    private boolean checkFirstTimeHit() {
+        String username = PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username");
+        if (username == null || username.trim().length() == 0) {
+            return true;
+        }
+        return false;
+    }
 }

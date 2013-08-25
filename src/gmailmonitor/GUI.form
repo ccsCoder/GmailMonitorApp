@@ -138,6 +138,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="jTextUsername">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="PropertyFileWriter.CONNECTION_PROPERTIES.getProperty(&quot;username&quot;)" type="code"/>
+        </Property>
+      </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="jHostCombo">
       <Properties>
@@ -156,6 +161,9 @@
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPassword1">
       <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="PropertyFileWriter.CONNECTION_PROPERTIES.getProperty(&quot;password&quot;)" type="code"/>
+        </Property>
         <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&#x9;&lt;strong&gt;Enter your App specific password &lt;/strong&gt;&#xa;&lt;/html&gt;"/>
       </Properties>
     </Component>
@@ -166,7 +174,9 @@
     </Component>
     <Component class="javax.swing.JTextField" name="jTextInboxName">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Inbox"/>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="PropertyFileWriter.CONNECTION_PROPERTIES.getProperty(&quot;folder&quot;)" type="code"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
@@ -175,6 +185,11 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JPasswordField" name="jPassword2">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="PropertyFileWriter.CONNECTION_PROPERTIES.getProperty(&quot;password&quot;)" type="code"/>
+        </Property>
+      </Properties>
     </Component>
     <Container class="javax.swing.JPanel" name="jPanel1">
       <Properties>
