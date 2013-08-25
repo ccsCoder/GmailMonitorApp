@@ -4,7 +4,19 @@
  */
 package gmailmonitor;
 
+import gmailmonitor.utils.PropertyFileWriter;
+import java.awt.AWTException;
+import java.awt.Image;
+import java.awt.MenuItem;
+import java.awt.PopupMenu;
+import java.awt.SystemTray;
+import java.awt.Toolkit;
+import java.awt.TrayIcon;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -13,6 +25,8 @@ import javax.swing.JOptionPane;
  */
 public class GUI extends javax.swing.JFrame {
     private boolean isValid=true;
+    private SystemTray tray;
+    private TrayIcon trayIcon;
     /**
      * Creates new form GUI
      */
@@ -32,17 +46,17 @@ public class GUI extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
+        jTextUsername = new javax.swing.JTextField();
+        jHostCombo = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        jPassword1 = new javax.swing.JPasswordField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        jTextInboxName = new javax.swing.JTextField();
         jLabel7 = new javax.swing.JLabel();
-        jPasswordField2 = new javax.swing.JPasswordField();
+        jPassword2 = new javax.swing.JPasswordField();
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        jSaveButton = new javax.swing.JButton();
+        jCancelButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
 
@@ -51,32 +65,37 @@ public class GUI extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Configuration Screen");
 
-        jLabel1.setText("Host");
+        jLabel1.setText("Host:");
 
-        jLabel2.setText("Username");
+        jLabel2.setText("Username:");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "gMail", "Yahoo!" }));
+        jHostCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "gMail", "Yahoo!" }));
 
-        jLabel3.setText("Password");
+        jLabel3.setText("Password:");
 
-        jPasswordField1.setToolTipText("<html>\n\t<strong>Enter your App specific password </strong>\n</html>");
+        jPassword1.setToolTipText("<html>\n\t<strong>Enter your App specific password </strong>\n</html>");
 
         jLabel6.setText("Folder to Monitor:");
 
-        jTextField1.setText("Inbox");
+        jTextInboxName.setText("Inbox");
 
-        jLabel7.setText("Confirm Password");
+        jLabel7.setText("Confirm Password:");
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
-        jButton1.setText("Save >>");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        jSaveButton.setText("Save >>");
+        jSaveButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                jSaveButtonActionPerformed(evt);
             }
         });
 
-        jButton2.setText("<< Cancel");
+        jCancelButton.setText("<< Cancel");
+        jCancelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCancelButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -84,9 +103,9 @@ public class GUI extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(91, 91, 91)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(47, 47, 47)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(98, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -94,8 +113,8 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
 
@@ -140,22 +159,22 @@ public class GUI extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(137, 137, 137)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                            .addComponent(jTextUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jHostCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(jPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel7)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(86, 86, 86)
                                         .addGap(99, 99, 99)
-                                        .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addComponent(jLabel6)
                                         .addGap(98, 98, 98)
-                                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addComponent(jTextInboxName, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(2, 2, 2)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -172,23 +191,23 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(20, 20, 20)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jHostCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextInboxName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
                 .addGap(40, 40, 40)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -198,29 +217,57 @@ public class GUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        
-        if (this.jTextField2.getText().trim().length()==0) {
-            JOptionPane.showMessageDialog(null, "Please Provide a User Name", "OOPS!", JOptionPane.ERROR_MESSAGE);
-            return;
+    private void jSaveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSaveButtonActionPerformed
+        try {
+            // TODO add your handling code here:
+            
+            if (this.jTextUsername.getText().trim().length()==0) {
+                JOptionPane.showMessageDialog(null, "Please Provide a User Name", "OOPS!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (this.jPassword1.getPassword().length==0) {
+                JOptionPane.showMessageDialog(null, "Cannot leave Password field Empty!", "OOPS!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (!Arrays.equals(this.jPassword1.getPassword(), this.jPassword2.getPassword())) {
+                JOptionPane.showMessageDialog(null, "Both Passwords Do Not Match!", "OOPS!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            if (this.jTextInboxName.getText().trim().length()==0) {
+                JOptionPane.showMessageDialog(null, "Please Provide a Folder to Monitor", "OOPS!", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            //If I reach here, it means, validations have passed.
+            JOptionPane.showMessageDialog(null, "Provide your Application Specific Password if you have enabled 2 Step Verification "
+                    + "for you Google Account.\nhttps://support.google.com/accounts/answer/185833?hl=en",
+                    "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
+           //Now persist the things in properties file.
+            PropertyFileWriter.writeToPropertyFile("host", this.jHostCombo.getSelectedItem().toString().equals("gMail")?"imap.gmail.com":"imap.yahoo.com");
+            PropertyFileWriter.writeToPropertyFile("username", this.jTextUsername.getText());
+            PropertyFileWriter.writeToPropertyFile("password", new String(this.jPassword1.getPassword()));
+            PropertyFileWriter.writeToPropertyFile("folder", this.jTextInboxName.getText());
+            
+            JOptionPane.showMessageDialog(null, "Saved Configuration. \n Application will keep running from your System Tray.",
+                    "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
+            this.initSystemTray();
+        } catch (AWTException ex) {
+            System.out.println("OOPS! There was a problem in initializing the Tray!");
+            ex.printStackTrace();
         }
-        if (this.jPasswordField1.getPassword().length==0) {
-            JOptionPane.showMessageDialog(null, "Cannot leave Password field Empty!", "OOPS!", JOptionPane.ERROR_MESSAGE);
-            return;
+    }//GEN-LAST:event_jSaveButtonActionPerformed
+
+    private void jCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCancelButtonActionPerformed
+        try {
+            // TODO add your handling code here:
+            this.initSystemTray();
+        } catch (AWTException ex) {
+            System.out.println("OOPS! There was a problem in initializing the Tray!");
+            ex.printStackTrace();
         }
-        
-        if (!Arrays.equals(this.jPasswordField1.getPassword(), this.jPasswordField2.getPassword())) {
-            JOptionPane.showMessageDialog(null, "Both Passwords Do Not Match!", "OOPS!", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        if (this.jTextField1.getText().trim().length()==0) {
-            JOptionPane.showMessageDialog(null, "Please Provide a Folder to Monitor", "OOPS!", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_jCancelButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -251,15 +298,15 @@ public class GUI extends javax.swing.JFrame {
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 new GUI().setVisible(true);
             }
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JButton jCancelButton;
+    private javax.swing.JComboBox jHostCombo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -269,9 +316,50 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPasswordField jPasswordField1;
-    private javax.swing.JPasswordField jPasswordField2;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JPasswordField jPassword1;
+    private javax.swing.JPasswordField jPassword2;
+    private javax.swing.JButton jSaveButton;
+    private javax.swing.JTextField jTextInboxName;
+    private javax.swing.JTextField jTextUsername;
     // End of variables declaration//GEN-END:variables
+
+    private void initSystemTray() throws AWTException {
+            
+        if ( SystemTray.isSupported()==true)
+        {    
+            tray = SystemTray.getSystemTray();
+            Image image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/Icon.gif"));
+            trayIcon = new TrayIcon(image,"gMail MOnitor",this.createPopupMenuForTray());
+//            this.addPopupMenuToTray(tray,trayIcon);
+            //add to tray
+            tray.add(trayIcon);
+            //make that form invisible
+            this.setVisible(false);
+
+        }
+        else
+            System.out.println("\nSystemTray not supported!!!");
+        }
+
+    private PopupMenu createPopupMenuForTray() {
+        PopupMenu popup = new PopupMenu();
+        MenuItem item1=new MenuItem("Configuration");
+        MenuItem item2=new MenuItem("Exit! (Stop Monitoring and Calling)");
+        popup.add(item1);
+        popup.add(item2);
+        item1.addActionListener(new ActionListener() {
+        //trayIcon.setPopupMenu(popup);
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUI.this.setVisible(true);
+                tray.remove(trayIcon);
+            }
+
+            
+        });
+        return popup;
+       
+    }
+        
+    
 }
