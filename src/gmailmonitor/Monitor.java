@@ -126,8 +126,6 @@ public class Monitor extends TimerTask {
                 }
             });
 
-
-
         } catch(MessagingException mse) {
             System.out.println("OOPS! Something Went Wrong...");
             Monitor.this.successful=false;
