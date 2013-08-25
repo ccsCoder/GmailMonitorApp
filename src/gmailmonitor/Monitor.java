@@ -9,6 +9,7 @@ import javax.mail.event.*;
 import com.sun.mail.imap.*;
 import gmailmonitor.beans.Error;
 import java.net.UnknownHostException;
+import gmailmonitor.beans.*;
 
 /* Monitors given mailbox for new mail */
 /**
@@ -120,6 +121,21 @@ public class Monitor extends TimerTask {
                             Monitor.this.successful=false;
                             Monitor.this.error = new gmailmonitor.beans.Error(mex.getMessage(),mex.getClass());
 //                            mex.printStackTrace();
+                        }
+                        catch(ResponseException respEx)
+                        {
+                        	System.out.println("OOPS! Something went wrong...");
+                            Monitor.this.successful=false;
+                            Monitor.this.error = new gmailmonitor.beans.Error(respEx.getMessage(),respEx.getClass());
+//                            respEx.printStackTrace();
+                        	
+                        }
+                        catch(NetworkException netEx)
+                        {
+                        	System.out.println("OOPS! Something went wrong...");
+                            Monitor.this.successful=false;
+                            Monitor.this.error = new gmailmonitor.beans.Error(netEx.getMessage(),netEx.getClass());
+//                            netEx.printStackTrace();	
                         }
                         
                     }
