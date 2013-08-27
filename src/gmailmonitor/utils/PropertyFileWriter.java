@@ -13,17 +13,13 @@ import java.util.Properties;
  * @author CodeBeast
  */
 public class PropertyFileWriter {
-    private final static String PROPERTY_FILE_NAME="connections.properties";
+    private final static String PROPERTY_FILE_NAME="configuration.properties";
     public final static Properties CONNECTION_PROPERTIES = new Properties();
     //private static File propFile;
     
     static {
         try {
-            //System.out.println();
-            //propFile= new File(System.getProperty("user.dir")+File.separator+PROPERTY_FILE_NAME);
-            
-            //System.out.println("File read from:"+propFile.getAbsolutePath().toString());
-            CONNECTION_PROPERTIES.load(PropertyFileWriter.class.getResourceAsStream("/resources/configuration.properties"));
+            loadProperties();
         } catch (IOException ex) {
             System.out.println("OOPS!"+ex.getMessage());
         }
@@ -38,5 +34,10 @@ public class PropertyFileWriter {
         } catch (Exception ex) {
             System.out.println("OOPS!"+ex.getMessage());
         }
+    }
+
+    public static void loadProperties() throws IOException {
+        CONNECTION_PROPERTIES.load(PropertyFileWriter.class.getResourceAsStream("/resources/configuration.properties"));
+        System.out.println("Loaded Properties...");
     }
 }

@@ -14,12 +14,13 @@ import gmailmonitor.beans.*;
 /* Monitors given mailbox for new mail */
 /**
  * Class that Monitors a folder
+ *
  * @author Neo
  */
 public class Monitor extends TimerTask {
 
     private String[] params = new String[4];
-    private boolean keepMonitoring,successful;
+    private boolean keepMonitoring, successful;
     private Folder inbox;
     private gmailmonitor.beans.Error error;
 
@@ -29,8 +30,8 @@ public class Monitor extends TimerTask {
         params[2] = password;
         params[3] = monitorFolderName;
         //this.keepMonitoring = true;
-        this.successful=true;
-        
+        this.successful = true;
+
     }
 
     public Error getError() {
@@ -57,13 +58,14 @@ public class Monitor extends TimerTask {
         this.keepMonitoring = true;
         return this.monitorMailbox(this.params);
     }
-    
+
     public void stopMonitor() {
-        this.keepMonitoring=false;
+        this.keepMonitoring = false;
     }
 
     /**
      * Method that monitors the mailbox.
+     *
      * @param params
      * @return boolean ( true / false )
      */
@@ -99,79 +101,63 @@ public class Monitor extends TimerTask {
                     // Dump out the new messages
                     for (int i = 0; i < msgs.length; i++) {
                         try {
-                            System.out.println("-----");
-                            System.out.println("Message " + msgs[i].getMessageNumber() + ":");
                             MultipartEmailReader.readMultipartMessage(msgs[i]);
-                            
-                        }
-                        catch (UnknownHostException uhe) {
+
+                        } catch (UnknownHostException uhe) {
                             System.out.println("OOPS! Something went wrong...");
-                            Monitor.this.successful=false;
-                            Monitor.this.error = new gmailmonitor.beans.Error(uhe.getMessage(),uhe.getClass());
-                        }
-                        catch (IOException ioex) {
+                            Monitor.this.successful = false;
+                            Monitor.this.error = new gmailmonitor.beans.Error("Connection Problem! Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", uhe.getClass());
+                        } catch (IOException ioex) {
                             System.out.println("OOPS! Something went wrong...");
-                            Monitor.this.successful=false;
-                            Monitor.this.error = new gmailmonitor.beans.Error(ioex.getMessage(),ioex.getClass());
-                            
-//                            ioex.printStackTrace();
-                                    
+                            Monitor.this.successful = false;
+                            Monitor.this.error = new gmailmonitor.beans.Error("Problem Reading gMail Info! Verify that-\n1.You are connected to the Internet.", ioex.getClass());
                         } catch (MessagingException mex) {
                             System.out.println("OOPS! Something went wrong...");
-                            Monitor.this.successful=false;
-                            Monitor.this.error = new gmailmonitor.beans.Error(mex.getMessage(),mex.getClass());
-//                            mex.printStackTrace();
+                            Monitor.this.successful = false;
+                            Monitor.this.error = new gmailmonitor.beans.Error("gMail is Acting up! :(", mex.getClass());
+                        } catch (ResponseException respEx) {
+                            System.out.println("OOPS! Something went wrong...");
+                            Monitor.this.successful = false;
+                            Monitor.this.error = new gmailmonitor.beans.Error(respEx.getMessage(), respEx.getClass());
+                        } catch (NetworkException netEx) {
+                            System.out.println("OOPS! Something went wrong...");
+                            Monitor.this.successful = false;
+                            Monitor.this.error = new gmailmonitor.beans.Error(netEx.getMessage(), netEx.getClass());
                         }
-                        catch(ResponseException respEx)
-                        {
-                        	System.out.println("OOPS! Something went wrong...");
-                            Monitor.this.successful=false;
-                            Monitor.this.error = new gmailmonitor.beans.Error(respEx.getMessage(),respEx.getClass());
-//                            respEx.printStackTrace();
-                        	
-                        }
-                        catch(NetworkException netEx)
-                        {
-                        	System.out.println("OOPS! Something went wrong...");
-                            Monitor.this.successful=false;
-                            Monitor.this.error = new gmailmonitor.beans.Error(netEx.getMessage(),netEx.getClass());
-//                            netEx.printStackTrace();	
-                        }
-                        
+
                     }
                 }
             });
 
-        } catch(MessagingException mse) {
+        } catch (MessagingException mse) {
+            System.out.println("OOPS! Something went wrong...");
+            Monitor.this.successful = false;
+            Monitor.this.error = new gmailmonitor.beans.Error("OOPS!! There was a problem. Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", mse.getClass());
+            mse.printStackTrace();
+        } 
+        
+        catch (Exception e) {
             System.out.println("OOPS! Something Went Wrong...");
-            Monitor.this.successful=false;
-            Monitor.this.error = new gmailmonitor.beans.Error(mse.getMessage(),mse.getClass());
-//            mse.printStackTrace();
-            
-        } catch(Exception e) {
-            System.out.println("OOPS! Something Went Wrong...");
-            Monitor.this.successful=false;
-            Monitor.this.error = new gmailmonitor.beans.Error(e.getMessage(),e.getClass());
-//            e.printStackTrace();
-        }
-        finally {
+            Monitor.this.successful = false;
+            Monitor.this.error = new gmailmonitor.beans.Error("Keep Calm! Such things happen sometimes. Please restart the application.", e.getClass());
+        } finally {
             return Monitor.this.successful;
         }
-        
+
     }
 
     @Override
     public void run() {
         System.out.println("Listening to Messages...");
-      
+
         try {
 
-            while(this.keepMonitoring) {
+            while (this.keepMonitoring) {
                 IMAPFolder f = (IMAPFolder) inbox;
                 f.idle();
                 System.out.println("IDLE done");
             }
-            
+
             System.out.println("Flag was falsified. Quitting listening.");
             this.inbox.close(false);
         } catch (FolderClosedException fex) {

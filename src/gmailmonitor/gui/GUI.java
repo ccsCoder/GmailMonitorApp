@@ -4,8 +4,10 @@
  */
 package gmailmonitor.gui;
 
+import gmailmonitor.Monitor;
 import gmailmonitor.utils.PropertyFileWriter;
 import java.awt.AWTException;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -15,8 +17,7 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Timer;
 import javax.swing.JOptionPane;
 
 /**
@@ -28,13 +29,13 @@ public class GUI extends javax.swing.JFrame {
     private boolean isValid = true;
     private SystemTray tray;
     private TrayIcon trayIcon;
-    private NotificationPopup notifier;
+    
     /**
      * Creates new form GUI
      */
     public GUI() {
         initComponents();
-        notifier= new NotificationPopup();
+        
     }
 
     /**
@@ -55,37 +56,40 @@ public class GUI extends javax.swing.JFrame {
         jPassword1 = new javax.swing.JPasswordField();
         jLabel6 = new javax.swing.JLabel();
         jTextInboxName = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
         jPassword2 = new javax.swing.JPasswordField();
         jPanel1 = new javax.swing.JPanel();
         jSaveButton = new javax.swing.JButton();
         jCancelButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
 
         jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Configuration Screen");
 
+        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Host:");
 
+        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel2.setText("Username:");
 
         jTextUsername.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username"));
 
         jHostCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "gMail", "Yahoo!" }));
 
+        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel3.setText("Password:");
 
         jPassword1.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password"));
         jPassword1.setToolTipText("<html>\n\t<strong>Enter your App specific password </strong>\n</html>");
 
+        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText("Folder to Monitor:");
 
         jTextInboxName.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("folder"));
-
-        jLabel7.setText("Confirm Password:");
 
         jPassword2.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password"));
 
@@ -110,11 +114,11 @@ public class GUI extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(91, 91, 91)
+                .addGap(111, 111, 111)
                 .addComponent(jCancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(47, 47, 47)
+                .addGap(59, 59, 59)
                 .addComponent(jSaveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(98, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -129,24 +133,36 @@ public class GUI extends javax.swing.JFrame {
         jPanel2.setBackground(new java.awt.Color(204, 204, 204));
 
         jLabel5.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel5.setText("Configuration");
+        jLabel5.setText("Call Bot Configuration");
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/logo.png"))); // NOI18N
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(201, 201, 201)
+                .addContainerGap()
+                .addComponent(jLabel8)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel5)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(105, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel5)
-                .addContainerGap())
+                .addGap(23, 23, 23))
         );
+
+        jLabel9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel9.setText("Confirm Password:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -155,14 +171,21 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(101, 101, 101)
+                        .addGap(122, 122, 122)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel1)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(jLabel3)
-                                        .addComponent(jLabel2)))
+                                    .addComponent(jLabel9)
+                                    .addComponent(jLabel6))
+                                .addGap(97, 97, 97)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextInboxName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jPassword2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel2)
+                                    .addComponent(jLabel1))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(137, 137, 137)
@@ -171,25 +194,13 @@ public class GUI extends javax.swing.JFrame {
                                             .addComponent(jHostCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel7)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(86, 86, 86)
-                                        .addGap(99, 99, 99)
-                                        .addComponent(jPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addGap(98, 98, 98)
-                                        .addComponent(jTextInboxName, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(2, 2, 2)))
+                                        .addComponent(jPassword1, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -197,7 +208,7 @@ public class GUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
+                .addGap(67, 67, 67)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jHostCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
@@ -212,12 +223,12 @@ public class GUI extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7))
+                    .addComponent(jLabel9))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextInboxName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
-                .addGap(40, 40, 40)
+                .addGap(88, 88, 88)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -261,6 +272,9 @@ public class GUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null, "Saved Configuration. \n Application will keep running from your System Tray.",
                     "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
             this.initSystemTray();
+            //Now Initialize the Gmail Monitor.
+            this.initGmailMonitor();
+            
         } catch (AWTException ex) {
             System.out.println("OOPS! There was a problem in initializing the Tray!");
             ex.printStackTrace();
@@ -276,7 +290,20 @@ public class GUI extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jCancelButtonActionPerformed
+    
+    private void centerWindow() {
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+ 
+        // Determine the new location of the window
+        int w = this.getSize().width;
+        int h = this.getSize().height;
+        int x = (dim.width-w)/2;
+        int y = (dim.height-h)/2;
 
+        // Move the window
+        this.setLocation(x, y);
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -304,20 +331,20 @@ public class GUI extends javax.swing.JFrame {
             public void run() {
                 GUI gui = new GUI();
                 gui.setVisible(true);
+                gui.centerWindow();
                 if (!gui.checkFirstTimeHit()) {
                     try {
                         System.out.println("Not first hit");
                         //if returning to the app, go to SysTray Directly.
                         gui.initSystemTray();
+                        //Now Initialize the Gmail Monitor.
+                        GUI.initGmailMonitor();
                     } catch (AWTException ex) {
                         System.out.println("OOPS! Cannot init System Tray");
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Please take a moment to configure the app.", "First Launch", JOptionPane.INFORMATION_MESSAGE);
                 }
-                
-//                notifier.showPopup("We are Monitoring your mails...! ");
-                
             }
         });
     }
@@ -330,7 +357,8 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPassword1;
@@ -390,5 +418,28 @@ public class GUI extends javax.swing.JFrame {
             return true;
         }
         return false;
+    }
+    
+    /**
+     * Method to initialize the Monitor Class...
+     */
+    private static void initGmailMonitor() {
+        Timer monitoringTimer = new Timer("GmailMonitorTimer");
+        String host=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("host");
+        String userName=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username");
+        String password=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password");
+        String folder=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("folder");
+
+        //Create the task
+        Monitor gmailTimerTask = new Monitor(host,userName,password,folder);
+        if(gmailTimerTask.startMonitor()==false) {
+            //This means that an Error has occured.
+            System.out.println("Houston! We have a problem !");
+            System.out.println(gmailTimerTask.getError().getHumanReadableErrorMessage());
+            JOptionPane.showMessageDialog(null, gmailTimerTask.getError().getHumanReadableErrorMessage(), "Something Went Wrong!", JOptionPane.ERROR_MESSAGE);
+            System.exit(1); //bail out
+        }
+        System.out.println("Gmail Monitoring Task will start in 1 second...");
+        monitoringTimer.schedule(gmailTimerTask, 1000);
     }
 }

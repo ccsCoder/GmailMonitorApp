@@ -17,7 +17,7 @@ public class Error {
         
         this.errorMessage=errorMessage;
         this.exceptionClass=exceptionClass;
-        this.humanReadableErrorMessage = errorMessage+" Class: "+this.exceptionClass;
+        this.humanReadableErrorMessage = errorMessage;
     }
 
     public String getErrorMessage() {
