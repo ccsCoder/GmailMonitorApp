@@ -10,6 +10,7 @@ import com.sun.mail.imap.*;
 import gmailmonitor.beans.Error;
 import java.net.UnknownHostException;
 import gmailmonitor.beans.*;
+import gmailmonitor.utils.PropertyFileWriter;
 
 /* Monitors given mailbox for new mail */
 /**
@@ -101,7 +102,14 @@ public class Monitor extends TimerTask {
                     // Dump out the new messages
                     for (int i = 0; i < msgs.length; i++) {
                         try {
-                            MultipartEmailReader.readMultipartMessage(msgs[i]);
+                            if(msgs[i].getSubject().toLowerCase().contains(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("subject")) && 
+                            	(msgs[i].getFrom()[0].toString().contains(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("sender"))))
+                             {
+                            	MultipartEmailReader.readMultipartMessage(msgs[i]);
+                            
+                            }
+                            
+                            
 
                         } catch (UnknownHostException uhe) {
                             System.out.println("OOPS! Something went wrong...");
