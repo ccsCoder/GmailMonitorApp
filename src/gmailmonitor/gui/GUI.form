@@ -31,15 +31,10 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel2" max="32767" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jPanel1" max="32767" attributes="0"/>
-                  </Group>
+                  <Component id="jPanel2" max="32767" attributes="0"/>
+                  <Component id="jPanel1" alignment="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -260,6 +255,10 @@
               <Connection code="PropertyFileWriter.CONNECTION_PROPERTIES.getProperty(&quot;password&quot;)" type="code"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jPassword2FocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jPassword2FocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="jTextUsername">
           <Properties>
@@ -283,6 +282,10 @@
             </Property>
             <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;&#x9;&lt;strong&gt;Enter your App specific password &lt;/strong&gt;&#xa;&lt;/html&gt;"/>
           </Properties>
+          <Events>
+            <EventHandler event="focusGained" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jPassword1FocusGained"/>
+            <EventHandler event="focusLost" listener="java.awt.event.FocusListener" parameters="java.awt.event.FocusEvent" handler="jPassword1FocusLost"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel1">
           <Properties>
@@ -445,7 +448,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jLabelNotification" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelNotification" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -458,7 +461,7 @@
               <Font name="Tahoma" size="14" style="1"/>
             </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="Dynamic Message Area"/>
+            <Property name="text" type="java.lang.String" value="We only need a few details to get started !"/>
           </Properties>
         </Component>
       </SubComponents>

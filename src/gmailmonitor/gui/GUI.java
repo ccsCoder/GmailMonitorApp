@@ -149,6 +149,14 @@ public class GUI extends javax.swing.JFrame {
         jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Connectivity Settings", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 14), new java.awt.Color(0, 0, 0))); // NOI18N
 
         jPassword2.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password"));
+        jPassword2.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPassword2FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jPassword2FocusLost(evt);
+            }
+        });
 
         jTextUsername.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username"));
 
@@ -157,6 +165,14 @@ public class GUI extends javax.swing.JFrame {
 
         jPassword1.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password"));
         jPassword1.setToolTipText("<html>\n\t<strong>Enter your App specific password </strong>\n</html>");
+        jPassword1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                jPassword1FocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jPassword1FocusLost(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel1.setText("Host:");
@@ -278,7 +294,7 @@ public class GUI extends javax.swing.JFrame {
 
         jLabelNotification.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabelNotification.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelNotification.setText("Dynamic Message Area");
+        jLabelNotification.setText("We only need a few details to get started !");
 
         javax.swing.GroupLayout jPanelNotificationPanelLayout = new javax.swing.GroupLayout(jPanelNotificationPanel);
         jPanelNotificationPanel.setLayout(jPanelNotificationPanelLayout);
@@ -293,7 +309,7 @@ public class GUI extends javax.swing.JFrame {
             jPanelNotificationPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelNotificationPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabelNotification)
+                .addComponent(jLabelNotification, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -302,13 +318,10 @@ public class GUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -343,29 +356,34 @@ public class GUI extends javax.swing.JFrame {
             if (this.jTextUsername.getText().trim().length() == 0) {
                 //JOptionPane.showMessageDialog(null, "Please Provide a User Name", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 GeneralUtils.displayMessage("Please Provide a User Name", GeneralUtils.FAILURE_MESSAGE, this.jLabelNotification, jPanelNotificationPanel);
+                this.jTextUsername.requestFocus();
                 return;
             }
             if (this.jPassword1.getPassword().length == 0) {
                 //JOptionPane.showMessageDialog(null, "Cannot leave Password field Empty!", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 GeneralUtils.displayMessage("Cannot leave Password field Empty!", GeneralUtils.FAILURE_MESSAGE, this.jLabelNotification, jPanelNotificationPanel);
+                this.jPassword1.requestFocus();
                 return;
             }
 
             if (!Arrays.equals(this.jPassword1.getPassword(), this.jPassword2.getPassword())) {
                 //JOptionPane.showMessageDialog(null, "Both Passwords Do Not Match!", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 GeneralUtils.displayMessage("Both Passwords Do Not Match!", GeneralUtils.FAILURE_MESSAGE, this.jLabelNotification, jPanelNotificationPanel);
+                this.jPassword2.requestFocus();
                 return;
             }
 
             if (this.jTextInboxName.getText().trim().length() == 0) {
                 //JOptionPane.showMessageDialog(null, "Please Provide a Folder to Monitor", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 GeneralUtils.displayMessage("Please Provide a Folder to Monitor!", GeneralUtils.FAILURE_MESSAGE, this.jLabelNotification, jPanelNotificationPanel);
+                this.jTextInboxName.requestFocus();
                 return;
             }
             
             if(this.jTextSubject.getText().trim().length()==0 && this.jTextSender.getText().trim().length()==0) {
                 //JOptionPane.showMessageDialog(null, "You MUST provide either a Sender or a Subject !", "OOPS!", JOptionPane.ERROR_MESSAGE);
                 GeneralUtils.displayMessage("You MUST provide either a Sender or a Subject !", GeneralUtils.FAILURE_MESSAGE, this.jLabelNotification, jPanelNotificationPanel);
+                this.jTextSubject.requestFocus();
                 return;
             }
 
@@ -402,6 +420,28 @@ public class GUI extends javax.swing.JFrame {
             ex.printStackTrace();
         }
     }//GEN-LAST:event_jCancelButtonActionPerformed
+
+    private void jPassword1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPassword1FocusGained
+        // TODO add your handling code here:
+        GeneralUtils.displayMessage("<html><p style='font-size:10pt'>Enter Application Specific Password if you have enabled 2 STEP VERIFICATION for your Account.</p>"
+                + "<p style='font-size:10pt'> "
+                + "For more Info: https://support.google.com/accounts/answer/185833?hl=en </p></html>", GeneralUtils.WARNING_MESSAGE, this.jLabelNotification, this.jPanelNotificationPanel);
+    }//GEN-LAST:event_jPassword1FocusGained
+
+    private void jPassword1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPassword1FocusLost
+        // TODO add your handling code here:
+        GeneralUtils.displayMessage("We just need a few details to get Started!", GeneralUtils.SUCCESS_MESSAGE, this.jLabelNotification, this.jPanelNotificationPanel);
+    }//GEN-LAST:event_jPassword1FocusLost
+
+    private void jPassword2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPassword2FocusGained
+        // TODO add your handling code here:
+        this.jPassword1FocusGained(evt);
+    }//GEN-LAST:event_jPassword2FocusGained
+
+    private void jPassword2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPassword2FocusLost
+        // TODO add your handling code here:
+        this.jPassword1FocusLost(evt);
+    }//GEN-LAST:event_jPassword2FocusLost
     
     private void centerWindow() {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
@@ -454,9 +494,10 @@ public class GUI extends javax.swing.JFrame {
                     } catch (AWTException ex) {
                         System.out.println("OOPS! Cannot init System Tray");
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Please take a moment to configure the app.", "First Launch", JOptionPane.INFORMATION_MESSAGE);
-                }
+                } 
+//                else {
+//                    JOptionPane.showMessageDialog(null, "Please take a moment to configure the app.", "First Launch", JOptionPane.INFORMATION_MESSAGE);
+//                }
             }
         });
     }
