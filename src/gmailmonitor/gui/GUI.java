@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Timer;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 
 /**
  * 
@@ -48,7 +49,9 @@ public class GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel4 = new javax.swing.JLabel();
+        jDialogProgress = new javax.swing.JDialog();
+        jProgressBarConnectionProgress = new javax.swing.JProgressBar();
+        jLabelProgressbarText = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jSaveButton = new javax.swing.JButton();
         jCancelButton = new javax.swing.JButton();
@@ -74,7 +77,35 @@ public class GUI extends javax.swing.JFrame {
         jPanelNotificationPanel = new javax.swing.JPanel();
         jLabelNotification = new javax.swing.JLabel();
 
-        jLabel4.setText("jLabel4");
+        jDialogProgress.setTitle("Just a moment...");
+
+        jProgressBarConnectionProgress.setIndeterminate(true);
+
+        jLabelProgressbarText.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabelProgressbarText.setText("Working...");
+
+        javax.swing.GroupLayout jDialogProgressLayout = new javax.swing.GroupLayout(jDialogProgress.getContentPane());
+        jDialogProgress.getContentPane().setLayout(jDialogProgressLayout);
+        jDialogProgressLayout.setHorizontalGroup(
+            jDialogProgressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialogProgressLayout.createSequentialGroup()
+                .addGap(36, 36, 36)
+                .addComponent(jProgressBarConnectionProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(34, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialogProgressLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabelProgressbarText)
+                .addGap(229, 229, 229))
+        );
+        jDialogProgressLayout.setVerticalGroup(
+            jDialogProgressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialogProgressLayout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addComponent(jLabelProgressbarText)
+                .addGap(18, 18, 18)
+                .addComponent(jProgressBarConnectionProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(56, Short.MAX_VALUE))
+        );
 
         setTitle("Configuration Screen");
 
@@ -388,9 +419,9 @@ public class GUI extends javax.swing.JFrame {
             }
 
             //If I reach here, it means, validations have passed.
-            JOptionPane.showMessageDialog(null, "Provide your Application Specific Password if you have enabled 2 Step Verification "
-                    + "for you Google Account.\nhttps://support.google.com/accounts/answer/185833?hl=en",
-                    "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
+//            JOptionPane.showMessageDialog(null, "Provide your Application Specific Password if you have enabled 2 Step Verification "
+//                    + "for you Google Account.\nhttps://support.google.com/accounts/answer/185833?hl=en",
+//                    "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
             //Now persist the things in properties file.
             PropertyFileWriter.writeToPropertyFile("host", this.jHostCombo.getSelectedItem().toString().equals("gMail") ? "imap.gmail.com" : "imap.yahoo.com");
             PropertyFileWriter.writeToPropertyFile("username", this.jTextUsername.getText());
@@ -399,11 +430,11 @@ public class GUI extends javax.swing.JFrame {
             PropertyFileWriter.writeToPropertyFile("sender", this.jTextSender.getText());
             PropertyFileWriter.writeToPropertyFile("subject", this.jTextSubject.getText());
 
-            JOptionPane.showMessageDialog(null, "Saved Configuration. \n Application will keep running from your System Tray.",
-                    "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
+//            JOptionPane.showMessageDialog(null, "Saved Configuration. \n Application will keep running from your System Tray.",
+//                    "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
             this.initSystemTray();
             //Now Initialize the Gmail Monitor.
-            GUI.initGmailMonitor();
+            this.initGmailMonitor();
             
         } catch (AWTException ex) {
             System.out.println("OOPS! There was a problem in initializing the Tray!");
@@ -490,7 +521,7 @@ public class GUI extends javax.swing.JFrame {
                         //if returning to the app, go to SysTray Directly.
                         gui.initSystemTray();
                         //Now Initialize the Gmail Monitor.
-                        GUI.initGmailMonitor();
+                        gui.initGmailMonitor();
                     } catch (AWTException ex) {
                         System.out.println("OOPS! Cannot init System Tray");
                     }
@@ -503,18 +534,19 @@ public class GUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jCancelButton;
+    private javax.swing.JDialog jDialogProgress;
     private javax.swing.JComboBox jHostCombo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelNotification;
+    private javax.swing.JLabel jLabelProgressbarText;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -522,6 +554,7 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelNotificationPanel;
     private javax.swing.JPasswordField jPassword1;
     private javax.swing.JPasswordField jPassword2;
+    private javax.swing.JProgressBar jProgressBarConnectionProgress;
     private javax.swing.JButton jSaveButton;
     private javax.swing.JTextField jTextInboxName;
     private javax.swing.JTextField jTextSender;
@@ -584,13 +617,14 @@ public class GUI extends javax.swing.JFrame {
     /**
      * Method to initialize the Monitor Class...
      */
-    private static void initGmailMonitor() {
+    private void initGmailMonitor() {
         Timer monitoringTimer = new Timer("GmailMonitorTimer");
         String host=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("host");
         String userName=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username");
         String password=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password");
         String folder=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("folder");
-
+        //Display the connection monitor.
+         this.jDialogProgress.setVisible(true);
         //Create the task
         Monitor gmailTimerTask = new Monitor(host,userName,password,folder);
         if(gmailTimerTask.startMonitor()==false) {
@@ -602,5 +636,6 @@ public class GUI extends javax.swing.JFrame {
         }
         System.out.println("Gmail Monitoring Task will start in 1 second...");
         monitoringTimer.schedule(gmailTimerTask, 1000);
+        
     }
 }
