@@ -30,16 +30,16 @@ public void run()
 {
 	boolean callHandle=false;
 	int count=0;
-
+        AgentRouterUtil agentMessage=new AgentRouterUtil();
 	
 	while(!callHandle){
 		try {
-			System.out.println("Started calling agent with number:"+currentAgent+": "+currentAgent);
+			System.out.println("Started calling agent with number:"+currentAgent+": "+userPhone);
 			
 			while(!(currentAgent==0)){
 			
 			_sparkResponse=spark.uRLConnectionReader(userPhone,currentAgent);
-			AgentRouterUtil agentMessage=new AgentRouterUtil();
+			
 			 String str=agentMessage.getMessage(_sparkResponse);
 			 System.out.println("Response from Spark:"+ _sparkResponse);
 			//Agent
@@ -53,16 +53,20 @@ public void run()
 				currentAgent=currentAgent-1;
 				count++;
 			}
-			
+                        else{
+                            currentAgent=currentAgent-1;
+                        }
 			}
-				if(count==3)	
-				{
+                       callHandle=true; 
+			/*if(count=='3')	
+			{
 					Timer newSchedule= new Timer();
 					AgentSchedular newSchedular= new AgentSchedular(userPhone);
 					newSchedule.schedule(newSchedular,110000);
+                                        System.out.println("all 3 agent busy:"+userPhone);
 				 break;
 				 
-				}
+			}*/
 		} catch (NetworkException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

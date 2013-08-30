@@ -21,7 +21,7 @@ import java.util.Timer;
  */
 public class MultipartEmailReader {
 	
-    public static String readMultipartMessage(Message msg) throws IOException, MessagingException,NetworkException, ResponseException {
+    public static void readMultipartMessage(Message msg) throws IOException, MessagingException,NetworkException, ResponseException {
         String mailTextResponse=null;
         Object mailContent = msg.getContent();
         SparkURLConnect sparkCon= new SparkURLConnect();
@@ -39,14 +39,12 @@ public class MultipartEmailReader {
                	{
             		//mailTextResponse=sparkCon.uRLConnectionReader((num.get(j)).substring(3, 13));
             	AgentSchedular agent = new AgentSchedular((num.get(j)).substring(3, 13));
-            	agentThreadTimer.schedule(agent,110000);
+            	agentThreadTimer.schedule(agent,1000);
             	 }
              
             }
         
-       
-        
-      return mailTextResponse;
+     // return mailTextResponse;
         
     }
 }

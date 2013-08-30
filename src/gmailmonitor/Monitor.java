@@ -102,8 +102,10 @@ public class Monitor extends TimerTask {
                     // Dump out the new messages
                     for (int i = 0; i < msgs.length; i++) {
                         try {
-                            if(msgs[i].getSubject().toLowerCase().contains(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("subject")) && 
-                            	(msgs[i].getFrom()[0].toString().contains(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("sender"))))
+                            if((msgs[i].getSubject().toLowerCase().contains(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("subject")))
+                                 || (msgs[i].getFrom()[0].toString().contains(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("sender")))
+                                 || (msgs[i].getSubject().toLowerCase().contains(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("subject")) && 
+                            	    (msgs[i].getFrom()[0].toString().contains(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("sender")))))
                              {
                             	MultipartEmailReader.readMultipartMessage(msgs[i]);
                             
