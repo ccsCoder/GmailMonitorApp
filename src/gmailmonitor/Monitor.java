@@ -32,7 +32,7 @@ public class Monitor extends TimerTask {
         params[3] = monitorFolderName;
         //this.keepMonitoring = true;
         this.successful = true;
-
+        
     }
 
     public Error getError() {
@@ -108,8 +108,6 @@ public class Monitor extends TimerTask {
                             	MultipartEmailReader.readMultipartMessage(msgs[i]);
                             
                             }
-                            
-                            
 
                         } catch (UnknownHostException uhe) {
                             System.out.println("OOPS! Something went wrong...");
