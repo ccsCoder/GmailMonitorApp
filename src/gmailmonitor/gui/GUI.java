@@ -20,7 +20,6 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Timer;
 import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
 
 /**
  * 
@@ -418,10 +417,7 @@ public class GUI extends javax.swing.JFrame {
                 return;
             }
 
-            //If I reach here, it means, validations have passed.
-//            JOptionPane.showMessageDialog(null, "Provide your Application Specific Password if you have enabled 2 Step Verification "
-//                    + "for you Google Account.\nhttps://support.google.com/accounts/answer/185833?hl=en",
-//                    "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
+
             //Now persist the things in properties file.
             PropertyFileWriter.writeToPropertyFile("host", this.jHostCombo.getSelectedItem().toString().equals("gMail") ? "imap.gmail.com" : "imap.yahoo.com");
             PropertyFileWriter.writeToPropertyFile("username", this.jTextUsername.getText());
@@ -430,8 +426,6 @@ public class GUI extends javax.swing.JFrame {
             PropertyFileWriter.writeToPropertyFile("sender", this.jTextSender.getText());
             PropertyFileWriter.writeToPropertyFile("subject", this.jTextSubject.getText());
 
-//            JOptionPane.showMessageDialog(null, "Saved Configuration. \n Application will keep running from your System Tray.",
-//                    "IMPORTANT!", JOptionPane.INFORMATION_MESSAGE);
             this.initSystemTray();
             //Now Initialize the Gmail Monitor.
             this.initGmailMonitor();
