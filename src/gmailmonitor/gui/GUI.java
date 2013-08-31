@@ -623,8 +623,6 @@ public class GUI extends javax.swing.JFrame {
         String userName=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username");
         String password=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password");
         String folder=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("folder");
-        //Display the connection monitor.
-         this.jDialogProgress.setVisible(true);
         //Create the task
         Monitor gmailTimerTask = new Monitor(host,userName,password,folder);
         if(gmailTimerTask.startMonitor()==false) {
@@ -635,6 +633,7 @@ public class GUI extends javax.swing.JFrame {
             System.exit(1); //bail out
         }
         System.out.println("Gmail Monitoring Task will start in 1 second...");
+        this.trayIcon.displayMessage("Gmail Monitor.", "Hi There! We're monitoring your mails in the background... ", TrayIcon.MessageType.INFO);
         monitoringTimer.schedule(gmailTimerTask, 1000);
         
     }
