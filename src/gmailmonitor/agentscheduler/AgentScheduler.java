@@ -1,9 +1,11 @@
-package gmailmonitor.agentschedular;
+package gmailmonitor.agentscheduler;
 
 import gmailmonitor.beans.NetworkException;
 import gmailmonitor.beans.ResponseException;
+import gmailmonitor.gui.GUI;
 import gmailmonitor.utils.PropertyFileWriter;
 import gmailmonitor.utils.SparkURLConnect;
+import java.awt.TrayIcon;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -15,11 +17,11 @@ import java.util.TimerTask;
  * @version 1.0
  * This class is used to schedule the calls between Agents.
  */
-public class AgentSchedular extends TimerTask {
+public class AgentScheduler extends TimerTask {
 
     private String customerPhoneNumber = null;
     
-    public AgentSchedular(String userNum) {
+    public AgentScheduler(String userNum) {
         System.out.println("Spawned a new Scheduler Thread for Phone Number:"+userNum);
         
         this.customerPhoneNumber = userNum;
@@ -49,6 +51,7 @@ public class AgentSchedular extends TimerTask {
                     switch(sparkResponseCode) {
                         case 0: //SUCCESS
                             callAnswered=true;
+                             GUI.getTrayIcon().displayMessage("Gmail Monitor", "Call Answered Successfully to number"+customerPhoneNumber+" by agent-"+currentAgent, TrayIcon.MessageType.INFO);
                             System.out.println("Call Answered Successfully by Agent number!-"+currentAgent);
                             break;
                         case 112: //Agent is busy, move to next agent.
@@ -71,6 +74,7 @@ public class AgentSchedular extends TimerTask {
                             callAnswered=true;      //No need to keep running this thread anymore.
                             break;
                         default:   //unknown error
+                            GUI.getTrayIcon().displayMessage("Gmail Monitor", "Please contact to Spark guys to dial number"+customerPhoneNumber+" by agent-"+currentAgent, TrayIcon.MessageType.ERROR);
                             System.out.println("Mayday, Mayday! He's dead Jim! And we have no Idea why. Maybe you should get hold of those Spark guys!");
                             callAnswered=true;
                             break;
@@ -99,6 +103,6 @@ public class AgentSchedular extends TimerTask {
     private void delayScheduleSameCall(String userPhone) {
         System.out.println("Will Schedule Call for -"+userPhone+" in a while...");
         //schedule it for 2 minutes from now... and get the hell out of here...
-        new Timer().schedule(new AgentSchedular(customerPhoneNumber),   120000);
+        new Timer().schedule(new AgentScheduler(customerPhoneNumber),   120000);
     }
 }

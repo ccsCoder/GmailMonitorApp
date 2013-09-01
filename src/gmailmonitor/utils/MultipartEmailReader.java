@@ -4,7 +4,7 @@
  */
 package gmailmonitor.utils;
 
-import gmailmonitor.agentschedular.AgentSchedular;
+import gmailmonitor.agentscheduler.AgentScheduler;
 import gmailmonitor.beans.*;
 
 import java.io.IOException;
@@ -36,7 +36,7 @@ public class MultipartEmailReader {
 
             for (int j = 0; j < num.size(); j++) {
                 //mailTextResponse=sparkCon.uRLConnectionReader((num.get(j)).substring(3, 13));
-                AgentSchedular agent = new AgentSchedular((num.get(j)).substring(3, 13));
+                AgentScheduler agent = new AgentScheduler((num.get(j)).substring(3, 13));
                 agentThreadTimer.schedule(agent, 1000);
             }
 

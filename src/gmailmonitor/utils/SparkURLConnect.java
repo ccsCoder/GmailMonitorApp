@@ -2,6 +2,8 @@ package gmailmonitor.utils;
 
 import gmailmonitor.beans.NetworkException;
 import gmailmonitor.beans.ResponseException;
+import gmailmonitor.gui.GUI;
+import java.awt.TrayIcon;
 
 import java.io.*;
 import java.net.*;
@@ -96,7 +98,7 @@ public class SparkURLConnect {
 
         try {
             sparkURL = new URI(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("SPARK_AGENT" + agentIndex + "_PART1") + number + PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("SPARK_AGENT" + agentIndex + "_PART2"));
-
+            GUI.getTrayIcon().displayMessage("Gmail Monitor", "Dialling no.-"+number+" through agent-"+agentIndex, TrayIcon.MessageType.INFO);
             URLConnection yc = sparkURL.toURL().openConnection();
             in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
             String inputLine;
