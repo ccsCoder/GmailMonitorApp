@@ -2,7 +2,6 @@ package gmailmonitor.agentschedular;
 
 import gmailmonitor.beans.NetworkException;
 import gmailmonitor.beans.ResponseException;
-import gmailmonitor.utils.AgentRouterUtil;
 import gmailmonitor.utils.PropertyFileWriter;
 import gmailmonitor.utils.SparkURLConnect;
 
@@ -10,76 +9,96 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ *
+ * @author Priyanka 
+ * @version 1.0
+ * This class is used to schedule the calls between Agents.
+ */
 public class AgentSchedular extends TimerTask {
 
-String userPhone=null;
-String _sparkResponse=null;
-int currentAgent =0;
-SparkURLConnect spark=null;
-	
-public AgentSchedular(String userNum){
+    private String customerPhoneNumber = null;
+    
+    public AgentSchedular(String userNum) {
+        System.out.println("Spawned a new Scheduler Thread for Phone Number:"+userNum);
+        
+        this.customerPhoneNumber = userNum;
+    }
+    
+    
+    @Override
+    /**
+     * this method will run in a separate thread whenever .schedule is invoked.
+     */
+    public void run() {
+        boolean callAnswered = false;
+        int count = 0,sparkResponseCode;
+//        AgentRouterUtil agentMessage = new AgentRouterUtil();
+        int currentAgent = Integer.parseInt(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("Number_of_Agent"));
+        SparkURLConnect spark = new SparkURLConnect();
 
-	currentAgent= Integer.parseInt(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("Number_of_Agent"));	
-	spark= new SparkURLConnect();
-	userPhone=userNum;
-}
+        while (!callAnswered) {
+            try {
+                System.out.println("Started calling agent with number:" + currentAgent + ": to phone " + customerPhoneNumber);
 
-
-
-public void run()
-{
-	boolean callHandle=false;
-	int count=0;
-        AgentRouterUtil agentMessage=new AgentRouterUtil();
-	
-	while(!callHandle){
-		try {
-			System.out.println("Started calling agent with number:"+currentAgent+": "+userPhone);
-			
-			while(!(currentAgent==0)){
-			
-			_sparkResponse=spark.uRLConnectionReader(userPhone,currentAgent);
-			
-			 String str=agentMessage.getMessage(_sparkResponse);
-			 System.out.println("Response from Spark:"+ _sparkResponse);
-			//Agent
-			if(_sparkResponse.equalsIgnoreCase("0"))
-			{
-				callHandle=true;
-				break;
-				
-			}
-			else if(_sparkResponse.equalsIgnoreCase("112")) {
-				currentAgent=currentAgent-1;
-				count++;
-			}
-                        else{
-                            currentAgent=currentAgent-1;
-                        }
-			}
-                       callHandle=true; 
-			/*if(count=='3')	
-			{
-					Timer newSchedule= new Timer();
-					AgentSchedular newSchedular= new AgentSchedular(userPhone);
-					newSchedule.schedule(newSchedular,110000);
-                                        System.out.println("all 3 agent busy:"+userPhone);
-				 break;
+                while (!callAnswered && currentAgent > 0) { //countdown to the agent number
+//                    _sparkResponse = Integer.parseInt(spark.uRLConnectionReader(userPhone, currentAgent));
+                    sparkResponseCode = Integer.parseInt(spark.uRLConnectionReader(customerPhoneNumber, currentAgent));
+                    System.out.println("Response from Spark:" + sparkResponseCode);
+                    //take some decisions.
+                    switch(sparkResponseCode) {
+                        case 0: //SUCCESS
+                            callAnswered=true;
+                            System.out.println("Call Answered Successfully by Agent number!-"+currentAgent);
+                            break;
+                        case 112: //Agent is busy, move to next agent.
+                            currentAgent--;
+                            System.out.println("Agent-"+currentAgent+" was busy. Moving on to next agent.");
+                            count++;
+                            break;
+                        case 106: //Network Congestion
+                            System.out.println("Network Congestion! Rescheduling call after some time...");
+                            this.delayScheduleSameCall(this.customerPhoneNumber);
+                            callAnswered=true;      //No need to keep running this thread anymore.
+                            break;
+                        case 107: //Customer Unreachable
+                            System.out.println("Customer Unreachable. Will not reschedule...");
+                            callAnswered=true;      //No use wasting resources on a customer who's unreachable. Maybe roaming.
+                            break;
+                        case 108:   //Customer busy on another call.
+                            System.out.println("Customer Busy on another call. Rescheduling call after a delay...");
+                            this.delayScheduleSameCall(this.customerPhoneNumber); 
+                            callAnswered=true;      //No need to keep running this thread anymore.
+                            break;
+                        default:   //unknown error
+                            System.out.println("Mayday, Mayday! He's dead Jim! And we have no Idea why. Maybe you should get hold of those Spark guys!");
+                            callAnswered=true;
+                            break;
+                    }
+                }
+                System.out.println("Out of inner decision Schedule Loop...");
+                if(count==Integer.parseInt(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("Number_of_Agent"))) {
+                     this.delayScheduleSameCall(customerPhoneNumber);
+                     break;
 				 
-			}*/
-		} catch (NetworkException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ResponseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
-}
+                 }
+            } catch (NetworkException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            } catch (ResponseException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
 
+        }
+    }
 
+    private void delayScheduleSameCall(String userPhone) {
+        System.out.println("Will Schedule Call for -"+userPhone+" in a while...");
+        //schedule it for 2 minutes from now... and get the hell out of here...
+        new Timer().schedule(new AgentSchedular(customerPhoneNumber),   120000);
+    }
 }

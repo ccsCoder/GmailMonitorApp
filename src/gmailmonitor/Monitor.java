@@ -10,6 +10,7 @@ import com.sun.mail.imap.*;
 import gmailmonitor.beans.Error;
 import java.net.UnknownHostException;
 import gmailmonitor.beans.*;
+import gmailmonitor.gui.GUI;
 import gmailmonitor.utils.PropertyFileWriter;
 
 /* Monitors given mailbox for new mail */
@@ -78,14 +79,16 @@ public class Monitor extends TimerTask {
             Session session = Session.getDefaultInstance(props, null);
 
             // session.setDebug(true);
-            System.out.println("Gmail Session created...");
+            //System.out.println("Gmail Session created...");
+            GUI.getLoggerFrame().log("Gmail Session created...");
             // Get a Store object
             Store store = session.getStore("imaps");
 
             // Connect
             store.connect(params[0], params[1], params[2]);
 
-            System.out.println("Connected to Gmail...");
+            //System.out.println("Connected to Gmail...");
+            GUI.getLoggerFrame().log("Connected to gMail...");
 
             // Open a Folder
             inbox = store.getFolder(params[3]);
@@ -97,7 +100,8 @@ public class Monitor extends TimerTask {
                 @Override
                 public void messagesAdded(MessageCountEvent ev) {
                     Message[] msgs = ev.getMessages();
-                    System.out.println("Got " + msgs.length + " new messages");
+//                    System.out.println("Got " + msgs.length + " new messages.");
+                    GUI.getLoggerFrame().log("Got "+msgs.length+" new messages.");
 
                     // Dump out the new messages
                     for (int i = 0; i < msgs.length; i++) {
@@ -143,7 +147,7 @@ public class Monitor extends TimerTask {
             System.out.println("OOPS! Something went wrong...");
             Monitor.this.successful = false;
             Monitor.this.error = new gmailmonitor.beans.Error("OOPS!! There was a problem. Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", mse.getClass());
-            mse.printStackTrace();
+//            mse.printStackTrace();
         } 
         
         catch (Exception e) {
@@ -165,7 +169,7 @@ public class Monitor extends TimerTask {
             while (this.keepMonitoring) {
                 IMAPFolder f = (IMAPFolder) inbox;
                 f.idle();
-                System.out.println("IDLE done");
+                //System.out.println("IDLE done");
             }
 
             System.out.println("Flag was falsified. Quitting listening.");

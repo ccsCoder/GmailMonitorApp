@@ -23,7 +23,7 @@ public class ParsingInbox {
 		for(int i=0;i<mp.getCount()-1;i++) {
 			bp= mp.getBodyPart(i);
 			Matcher matcher = pattern.matcher(bp.getContent().toString());
-			System.out.println("Full string for match: "+bp.getContent().toString());
+			//System.out.println("Full string for match: "+bp.getContent().toString());
 		    
 			while(matcher.find()) 
 			{

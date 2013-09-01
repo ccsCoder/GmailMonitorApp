@@ -14,37 +14,35 @@ import javax.mail.Multipart;
 import java.util.ArrayList;
 import java.util.Timer;
 
-
 /**
  *
  * @author CodeBeast
  */
 public class MultipartEmailReader {
-	
-    public static void readMultipartMessage(Message msg) throws IOException, MessagingException,NetworkException, ResponseException {
-        String mailTextResponse=null;
+
+    public static void readMultipartMessage(Message msg) throws IOException, MessagingException, NetworkException, ResponseException {
+        String mailTextResponse = null;
         Object mailContent = msg.getContent();
-        SparkURLConnect sparkCon= new SparkURLConnect();
+        SparkURLConnect sparkCon = new SparkURLConnect();
         Timer agentThreadTimer = new Timer("AgentThread");
-        
-        ArrayList<String> num= new ArrayList<String>();
-       
-        if ( mailContent instanceof Multipart) {
-        	
-            System.out.println("Multipart Message. Gotcha!");
+
+        ArrayList<String> num = new ArrayList<String>();
+
+        if (mailContent instanceof Multipart) {
+
+            //System.out.println("Multipart Message. Gotcha!");
             Multipart mp = (Multipart) mailContent;
-            num=ParsingInbox.patternMatch(mp);
-            
-            for(int j=0;j<num.size();j++)
-               	{
-            		//mailTextResponse=sparkCon.uRLConnectionReader((num.get(j)).substring(3, 13));
-            	AgentSchedular agent = new AgentSchedular((num.get(j)).substring(3, 13));
-            	agentThreadTimer.schedule(agent,1000);
-            	 }
-             
+            num = ParsingInbox.patternMatch(mp);
+
+            for (int j = 0; j < num.size(); j++) {
+                //mailTextResponse=sparkCon.uRLConnectionReader((num.get(j)).substring(3, 13));
+                AgentSchedular agent = new AgentSchedular((num.get(j)).substring(3, 13));
+                agentThreadTimer.schedule(agent, 1000);
             }
-        
-     // return mailTextResponse;
-        
+
+        }
+
+        // return mailTextResponse;
+
     }
 }

@@ -29,15 +29,31 @@ public class GUI extends javax.swing.JFrame {
 
     private boolean isValid = true;
     private SystemTray tray;
-    private TrayIcon trayIcon;
+    private static TrayIcon trayIcon;
+    private static LoggerFrame loggerFrame;
     
     /**
      * Creates new form GUI
      */
     public GUI() {
         initComponents();
+        //Also create the Logger Frame but keep it invisible.
+        this.loggerFrame = new LoggerFrame();
         
     }
+    
+    /**
+     * to return controlled instances of LoggerFrame
+     * @return LoggerFrame
+     */
+    public static LoggerFrame getLoggerFrame() {
+        return loggerFrame;
+    }
+    
+    public static TrayIcon getTrayIcon() {
+        return trayIcon;
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -48,9 +64,6 @@ public class GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jDialogProgress = new javax.swing.JDialog();
-        jProgressBarConnectionProgress = new javax.swing.JProgressBar();
-        jLabelProgressbarText = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jSaveButton = new javax.swing.JButton();
         jCancelButton = new javax.swing.JButton();
@@ -75,36 +88,6 @@ public class GUI extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         jPanelNotificationPanel = new javax.swing.JPanel();
         jLabelNotification = new javax.swing.JLabel();
-
-        jDialogProgress.setTitle("Just a moment...");
-
-        jProgressBarConnectionProgress.setIndeterminate(true);
-
-        jLabelProgressbarText.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabelProgressbarText.setText("Working...");
-
-        javax.swing.GroupLayout jDialogProgressLayout = new javax.swing.GroupLayout(jDialogProgress.getContentPane());
-        jDialogProgress.getContentPane().setLayout(jDialogProgressLayout);
-        jDialogProgressLayout.setHorizontalGroup(
-            jDialogProgressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jDialogProgressLayout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addComponent(jProgressBarConnectionProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(34, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialogProgressLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabelProgressbarText)
-                .addGap(229, 229, 229))
-        );
-        jDialogProgressLayout.setVerticalGroup(
-            jDialogProgressLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialogProgressLayout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabelProgressbarText)
-                .addGap(18, 18, 18)
-                .addComponent(jProgressBarConnectionProgress, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(56, Short.MAX_VALUE))
-        );
 
         setTitle("Configuration Screen");
 
@@ -286,7 +269,7 @@ public class GUI extends javax.swing.JFrame {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(63, Short.MAX_VALUE)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel4Layout.createSequentialGroup()
                         .addComponent(jLabel10)
@@ -304,8 +287,8 @@ public class GUI extends javax.swing.JFrame {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap(32, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextInboxName, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel6))
@@ -317,7 +300,7 @@ public class GUI extends javax.swing.JFrame {
                 .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jTextSender, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel10))
-                .addGap(44, 44, 44))
+                .addContainerGap(28, Short.MAX_VALUE))
         );
 
         jPanelNotificationPanel.setBackground(new java.awt.Color(204, 255, 204));
@@ -348,18 +331,18 @@ public class GUI extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jPanelNotificationPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -368,13 +351,13 @@ public class GUI extends javax.swing.JFrame {
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(27, 27, 27)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jPanelNotificationPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -432,7 +415,8 @@ public class GUI extends javax.swing.JFrame {
             
         } catch (AWTException ex) {
             System.out.println("OOPS! There was a problem in initializing the Tray!");
-            ex.printStackTrace();
+            GUI.getLoggerFrame().log("ERROR! There was a problem in initializing the Tray!");
+            //ex.printStackTrace();
         }
     }//GEN-LAST:event_jSaveButtonActionPerformed
 
@@ -511,13 +495,13 @@ public class GUI extends javax.swing.JFrame {
                 gui.centerWindow();
                 if (!gui.checkFirstTimeHit()) {
                     try {
-                        System.out.println("Not first hit");
                         //if returning to the app, go to SysTray Directly.
                         gui.initSystemTray();
                         //Now Initialize the Gmail Monitor.
                         gui.initGmailMonitor();
                     } catch (AWTException ex) {
                         System.out.println("OOPS! Cannot init System Tray");
+                        GUI.getLoggerFrame().log("ERROR! Cannot Initialize System Tray");
                     }
                 } 
 //                else {
@@ -528,7 +512,6 @@ public class GUI extends javax.swing.JFrame {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jCancelButton;
-    private javax.swing.JDialog jDialogProgress;
     private javax.swing.JComboBox jHostCombo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -540,7 +523,6 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabelNotification;
-    private javax.swing.JLabel jLabelProgressbarText;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
@@ -548,7 +530,6 @@ public class GUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanelNotificationPanel;
     private javax.swing.JPasswordField jPassword1;
     private javax.swing.JPasswordField jPassword2;
-    private javax.swing.JProgressBar jProgressBarConnectionProgress;
     private javax.swing.JButton jSaveButton;
     private javax.swing.JTextField jTextInboxName;
     private javax.swing.JTextField jTextSender;
@@ -560,9 +541,9 @@ public class GUI extends javax.swing.JFrame {
 
         if (SystemTray.isSupported() == true) {
             tray = SystemTray.getSystemTray();
-            Image image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/Icon.gif"));
-            trayIcon = new TrayIcon(image, "gMail MOnitor", this.createPopupMenuForTray());
-//            this.addPopupMenuToTray(tray,trayIcon);
+            Image image = Toolkit.getDefaultToolkit().getImage(this.getClass().getResource("/resources/icon.png"));
+            trayIcon = new TrayIcon(image, "gMail Monitor", this.createPopupMenuForTray());
+            trayIcon.setImageAutoSize(true);
             //add to tray
             tray.add(trayIcon);
             //make that form invisible
@@ -570,6 +551,11 @@ public class GUI extends javax.swing.JFrame {
 
         } else {
             System.out.println("\nSystemTray not supported!!!");
+            GUI.getLoggerFrame().log("ERROR! SystemTray not supported!!!");
+            this.setVisible(true);
+            //failover if there is no system tray.
+            GeneralUtils.displayMessage("Your Desktop Environment does not support minimizing to tray!", GeneralUtils.FAILURE_MESSAGE, this.jLabelNotification, this.jPanelNotificationPanel);
+            
         }
     }
 
@@ -577,8 +563,12 @@ public class GUI extends javax.swing.JFrame {
         PopupMenu popup = new PopupMenu();
         MenuItem item1 = new MenuItem("Configuration");
         MenuItem item2 = new MenuItem("Exit! (Stop Monitoring and Calling)");
+        MenuItem item3 = new MenuItem("View Activity Log");
+        
+        popup.add(item3);
         popup.add(item1);
         popup.add(item2);
+        
         item1.addActionListener(new ActionListener() {
             //trayIcon.setPopupMenu(popup);
             @Override
@@ -594,6 +584,13 @@ public class GUI extends javax.swing.JFrame {
                     tray.remove(trayIcon);
                     System.exit(0);
                 }
+            }
+        });
+        item3.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GUI.getLoggerFrame().setVisible(true);
             }
         });
         return popup;
@@ -617,8 +614,6 @@ public class GUI extends javax.swing.JFrame {
         String userName=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("username");
         String password=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password");
         String folder=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("folder");
-        //Display the connection monitor.
-         this.jDialogProgress.setVisible(true);
         //Create the task
         Monitor gmailTimerTask = new Monitor(host,userName,password,folder);
         if(gmailTimerTask.startMonitor()==false) {
@@ -626,10 +621,13 @@ public class GUI extends javax.swing.JFrame {
             System.out.println("Houston! We have a problem !");
             System.out.println(gmailTimerTask.getError().getHumanReadableErrorMessage());
             JOptionPane.showMessageDialog(null, gmailTimerTask.getError().getHumanReadableErrorMessage(), "Something Went Wrong!", JOptionPane.ERROR_MESSAGE);
-            System.exit(1); //bail out
+            GUI.getLoggerFrame().log(gmailTimerTask.getError().getHumanReadableErrorMessage());
+            //System.exit(1); //bail out
         }
         System.out.println("Gmail Monitoring Task will start in 1 second...");
+        GUI.getLoggerFrame().log("Gmail Monitoring Task will start in 1 second...");
         monitoringTimer.schedule(gmailTimerTask, 1000);
+        this.trayIcon.displayMessage("Gmail Monitor", "Hi There! We're down here, monitoring your mails. Right Click for Additional Actions", TrayIcon.MessageType.INFO);
         
     }
 }

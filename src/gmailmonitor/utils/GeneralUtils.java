@@ -17,6 +17,7 @@ public class GeneralUtils {
     public static final int SUCCESS_MESSAGE=1;
     public static final int FAILURE_MESSAGE=2;
     public static final int WARNING_MESSAGE=3;
+    public static final String NEWLINE = System.getProperty("line.separator");
     
     
     public static void displayMessage(String msg, int type, JLabel label, JPanel labelContainer) {
