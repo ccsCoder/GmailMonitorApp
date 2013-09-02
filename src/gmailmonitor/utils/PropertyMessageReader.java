@@ -1,5 +1,6 @@
 package gmailmonitor.utils;
 
+import gmailmonitor.gui.GUI;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -13,12 +14,12 @@ public class PropertyMessageReader {
 	        try {
 	            loadProperties();
 	        } catch (IOException ex) {
-	            System.out.println("OOPS!"+ex.getMessage());
+	            GUI.getLoggerFrame().log("ERROR!"+ex.getMessage());
 	        }
 	    }
 	    public static void loadProperties() throws IOException {
 	    	MESSAGE_PROPERTIES.load(PropertyFileWriter.class.getResourceAsStream("/resources/message.properties"));
-	        System.out.println("Loaded Properties...");
+	         GUI.getLoggerFrame().log("Loaded Properties...");
 	    }
 	}
 

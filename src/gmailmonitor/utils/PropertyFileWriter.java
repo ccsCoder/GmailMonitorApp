@@ -22,7 +22,7 @@ public class PropertyFileWriter {
         try {
             loadProperties();
         } catch (IOException ex) {
-            System.out.println("OOPS!"+ex.getMessage());
+            GUI.getLoggerFrame().log("ERROR!"+ex.getMessage());
         }
     }
     
@@ -31,17 +31,14 @@ public class PropertyFileWriter {
             CONNECTION_PROPERTIES.setProperty(propertyName, propertyValue);
             //PropertyFileWriter.class.getResource("/resources/connections.properties").
             CONNECTION_PROPERTIES.store(new FileOutputStream(PropertyFileWriter.class.getResource("/resources/configuration.properties").getFile()), null);
-            //System.out.println("Successfully Saved to property file:"+propertyName+" - "+propertyValue);
             GUI.getLoggerFrame().log("Wrote to property file:"+propertyName+" - "+propertyValue);
         } catch (Exception ex) {
-            System.out.println("OOPS!"+ex.getMessage());
             GUI.getLoggerFrame().log("ERROR!"+ex.getMessage());
         }
     }
 
     public static void loadProperties() throws IOException {
         CONNECTION_PROPERTIES.load(PropertyFileWriter.class.getResourceAsStream("/resources/configuration.properties"));
-        System.out.println("Loaded Properties...");
-//        GUI.getLoggerFrame().log("Loaded the Properties file...");
+        GUI.getLoggerFrame().log("Loaded the Properties file...");
     }
 }

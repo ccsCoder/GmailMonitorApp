@@ -79,8 +79,7 @@ public class Monitor extends TimerTask {
             Session session = Session.getDefaultInstance(props, null);
 
             // session.setDebug(true);
-            //System.out.println("Gmail Session created...");
-            GUI.getLoggerFrame().log("Gmail Session created...");
+             GUI.getLoggerFrame().log("Gmail Session created...");
             // Get a Store object
             Store store = session.getStore("imaps");
 
@@ -116,23 +115,23 @@ public class Monitor extends TimerTask {
                             }
 
                         } catch (UnknownHostException uhe) {
-                            System.out.println("OOPS! Something went wrong...");
+                            GUI.getLoggerFrame().log("ERROR...."+uhe.getMessage());
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error("Connection Problem! Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", uhe.getClass());
                         } catch (IOException ioex) {
-                            System.out.println("OOPS! Something went wrong...");
+                            GUI.getLoggerFrame().log("ERROR...."+ioex.getMessage());
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error("Problem Reading gMail Info! Verify that-\n1.You are connected to the Internet.", ioex.getClass());
                         } catch (MessagingException mex) {
-                            System.out.println("OOPS! Something went wrong...");
+                           GUI.getLoggerFrame().log("ERROR...."+mex.getMessage());
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error("gMail is Acting up! :(", mex.getClass());
                         } catch (ResponseException respEx) {
-                            System.out.println("OOPS! Something went wrong...");
+                           GUI.getLoggerFrame().log("ERROR...."+respEx.getMessage());
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error(respEx.getMessage(), respEx.getClass());
                         } catch (NetworkException netEx) {
-                            System.out.println("OOPS! Something went wrong...");
+                            GUI.getLoggerFrame().log("ERROR...."+netEx.getMessage());
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error(netEx.getMessage(), netEx.getClass());
                         }
@@ -142,14 +141,14 @@ public class Monitor extends TimerTask {
             });
 
         } catch (MessagingException mse) {
-            System.out.println("OOPS! Something went wrong...");
+            GUI.getLoggerFrame().log("ERROR...."+mse.getMessage());
             Monitor.this.successful = false;
             Monitor.this.error = new gmailmonitor.beans.Error("OOPS!! There was a problem. Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", mse.getClass());
 //            mse.printStackTrace();
         } 
         
         catch (Exception e) {
-            System.out.println("OOPS! Something Went Wrong...");
+            GUI.getLoggerFrame().log("Exception...."+e.getMessage());
             Monitor.this.successful = false;
             Monitor.this.error = new gmailmonitor.beans.Error("Keep Calm! Such things happen sometimes. Please restart the application.", e.getClass());
         } finally {
@@ -160,17 +159,17 @@ public class Monitor extends TimerTask {
 
     @Override
     public void run() {
-        System.out.println("Listening to Messages...");
+         GUI.getLoggerFrame().log("Listening to Messages...");
 
         try {
 
             while (this.keepMonitoring) {
                 IMAPFolder f = (IMAPFolder) inbox;
                 f.idle();
-                //System.out.println("IDLE done");
+                
             }
 
-            System.out.println("Flag was falsified. Quitting listening.");
+            GUI.getLoggerFrame().log("Flag was falsified. Quitting listening.");
             this.inbox.close(false);
         } catch (FolderClosedException fex) {
             fex.printStackTrace();
