@@ -11,7 +11,7 @@ public class AgentRouterUtil {
 	public String getMessage(String responseCode) throws NetworkException, IOException, ResponseException{
 		
 		//String  Responsestr=spark.uRLConnectionReader("8880509273");
-		String UserMsg=PropertyMessageReader.MESSAGE_PROPERTIES.getProperty(responseCode);
+		String UserMsg=PropertyMessageReader.getProperty(responseCode);
 		GUI.getLoggerFrame().log("UserMessage :"+ UserMsg);
 		return UserMsg;
 		}
