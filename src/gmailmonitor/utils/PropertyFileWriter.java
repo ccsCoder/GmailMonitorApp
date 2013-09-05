@@ -33,7 +33,7 @@ public class PropertyFileWriter {
             System.out.println("In Static");
             loadProperties();
         } catch (IOException ex) {
-            System.out.println("OOPS!"+ex.getMessage());
+            GUI.getLoggerFrame().log("ERROR!"+ex.getMessage());
         }
     }
     
@@ -45,7 +45,6 @@ public class PropertyFileWriter {
             //System.out.println("Successfully Saved to property file:"+propertyName+" - "+propertyValue);
             GUI.getLoggerFrame().log("Wrote to property file:"+propertyName+" - "+propertyValue);
         } catch (Exception ex) {
-            System.out.println("OOPS!"+ex.getMessage());
             GUI.getLoggerFrame().log("ERROR!"+ex.getMessage());
         }
     }

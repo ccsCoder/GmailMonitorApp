@@ -1,6 +1,7 @@
 package gmailmonitor.utils;
 
 import gmailmonitor.beans.*;
+import gmailmonitor.gui.GUI;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,14 +24,13 @@ public class ParsingInbox {
 		for(int i=0;i<mp.getCount()-1;i++) {
 			bp= mp.getBodyPart(i);
 			Matcher matcher = pattern.matcher(bp.getContent().toString());
-			//System.out.println("Full string for match: "+bp.getContent().toString());
-		    
+                        
 			while(matcher.find()) 
 			{
 				number.add(matcher.group());
 			}
 			
-			System.out.println("Total matched Number: "+number.toString());
+			GUI.getLoggerFrame().log("Total matched Number: "+number.toString());
         
 			}
 		}	

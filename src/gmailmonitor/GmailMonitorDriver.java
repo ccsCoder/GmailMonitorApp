@@ -3,11 +3,11 @@
  * and open the template in the editor.
  */
 package gmailmonitor;
-
+/*
 import gmailmonitor.utils.PropertyFileWriter;
 import java.util.Timer;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.Pattern;*/
 
 /**
  *
