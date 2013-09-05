@@ -1,25 +1,22 @@
 package gmailmonitor.utils;
 
+import gmailmonitor.gui.GUI;
 import java.io.IOException;
 import java.util.Properties;
+import java.util.ResourceBundle;
 
 public class PropertyMessageReader {
-	
-	    private final static String PROPERTY_FILE_NAME="message.properties";
-	    public final static Properties MESSAGE_PROPERTIES = new Properties();
-	    //private static File propFile;
+    private final static String PROPERTY_FILE_NAME="message.properties";
+    private static ResourceBundle bundle;
+    static {
+        bundle = ResourceBundle.getBundle("resources/message");
+        GUI.getLoggerFrame().log("Read Resource Bundle:"+PROPERTY_FILE_NAME);
+    }
+    
+    public static String getProperty(String key) {
+        return bundle.getString(key);
+    }
 	    
-	    static {
-	        try {
-	            loadProperties();
-	        } catch (IOException ex) {
-	            System.out.println("OOPS!"+ex.getMessage());
-	        }
-	    }
-	    public static void loadProperties() throws IOException {
-	    	MESSAGE_PROPERTIES.load(PropertyFileWriter.class.getResourceAsStream("/resources/message.properties"));
-	        System.out.println("Loaded Properties...");
-	    }
-	}
+}
 
 

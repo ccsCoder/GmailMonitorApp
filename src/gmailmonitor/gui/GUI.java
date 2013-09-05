@@ -36,9 +36,10 @@ public class GUI extends javax.swing.JFrame {
      * Creates new form GUI
      */
     public GUI() {
+        this.loggerFrame = new LoggerFrame();
         initComponents();
         //Also create the Logger Frame but keep it invisible.
-        this.loggerFrame = new LoggerFrame();
+        
         
     }
     
@@ -622,7 +623,7 @@ public class GUI extends javax.swing.JFrame {
             System.out.println(gmailTimerTask.getError().getHumanReadableErrorMessage());
             JOptionPane.showMessageDialog(null, gmailTimerTask.getError().getHumanReadableErrorMessage(), "Something Went Wrong!", JOptionPane.ERROR_MESSAGE);
             GUI.getLoggerFrame().log(gmailTimerTask.getError().getHumanReadableErrorMessage());
-            //System.exit(1); //bail out
+            System.exit(1); //bail out
         }
         System.out.println("Gmail Monitoring Task will start in 1 second...");
         GUI.getLoggerFrame().log("Gmail Monitoring Task will start in 1 second...");

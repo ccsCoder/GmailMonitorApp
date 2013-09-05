@@ -174,6 +174,7 @@ public class LoggerFrame extends javax.swing.JFrame {
                 f.createNewFile();
                 fw = new FileWriter(f);
                 fw.write(this.jTextAreaLog.getText());
+                fw.flush();
                 GUI.getTrayIcon().displayMessage("Gmail Monitor", "Log saved to \" "+f.getAbsolutePath()+"\"", TrayIcon.MessageType.INFO);
             }
         } catch (IOException ex) {

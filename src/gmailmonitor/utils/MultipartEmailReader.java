@@ -38,6 +38,8 @@ public class MultipartEmailReader {
                 //mailTextResponse=sparkCon.uRLConnectionReader((num.get(j)).substring(3, 13));
                 AgentSchedular agent = new AgentSchedular((num.get(j)).substring(3, 13));
                 agentThreadTimer.schedule(agent, 1000);
+                //Sleep for 10 seconds before sending another number... as this is the approximated Network Delay.
+//                Thread.sleep(10000);
             }
 
         }
