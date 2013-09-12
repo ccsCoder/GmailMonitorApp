@@ -17,6 +17,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  *
@@ -64,7 +65,7 @@ public class PropertyFileWriter {
             System.out.println("Warning! Config does not exist. Creating at:"+System.getProperty("user.home")+File.separatorChar+PROPERTY_FILE_NAME);
             f.createNewFile();
             fw = new FileWriter(f);
-            fw.write(GeneralUtils.CONFIG_FILE_TEXT);
+            fw.write(StringEscapeUtils.escapeHtml4(GeneralUtils.CONFIG_FILE_TEXT).replace("&amp;", "&"));
             fw.flush();
             
         } catch (IOException ex) {
