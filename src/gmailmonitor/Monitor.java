@@ -115,25 +115,26 @@ public class Monitor extends TimerTask {
                             }
 
                         } catch (UnknownHostException uhe) {
-                            GUI.getLoggerFrame().log("ERROR...."+uhe.getMessage());
                             Monitor.this.successful = false;
-                            Monitor.this.error = new gmailmonitor.beans.Error("Connection Problem! Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", uhe.getClass());
+                            Monitor.this.error = new gmailmonitor.beans.Error(uhe.getMessage(),"Connection Problem! Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", uhe.getClass());
+                            GUI.getLoggerFrame().log(Monitor.this.error.toString());
                         } catch (IOException ioex) {
-                            GUI.getLoggerFrame().log("ERROR...."+ioex.getMessage());
                             Monitor.this.successful = false;
-                            Monitor.this.error = new gmailmonitor.beans.Error("Problem Reading gMail Info! Verify that-\n1.You are connected to the Internet.", ioex.getClass());
+                            Monitor.this.error = new gmailmonitor.beans.Error(ioex.getMessage(),"Problem Reading gMail Info! Verify that-\n1.You are connected to the Internet.", ioex.getClass());
+                            GUI.getLoggerFrame().log(Monitor.this.error.toString());
                         } catch (MessagingException mex) {
-                           GUI.getLoggerFrame().log("ERROR...."+mex.getMessage());
                             Monitor.this.successful = false;
-                            Monitor.this.error = new gmailmonitor.beans.Error("gMail is Acting up! :(", mex.getClass());
+                            Monitor.this.error = new gmailmonitor.beans.Error(mex.getMessage(),"gMail is Acting up! :(", mex.getClass());
+                            GUI.getLoggerFrame().log(Monitor.this.error.toString());
                         } catch (ResponseException respEx) {
-                           GUI.getLoggerFrame().log("ERROR...."+respEx.getMessage());
-                            Monitor.this.successful = false;
-                            Monitor.this.error = new gmailmonitor.beans.Error(respEx.getMessage(), respEx.getClass());
+                             Monitor.this.successful = false;
+                            Monitor.this.error = new gmailmonitor.beans.Error(respEx.getMessage(),"Not getting response ...", respEx.getClass());
+                            GUI.getLoggerFrame().log(Monitor.this.error.toString());
+                             
                         } catch (NetworkException netEx) {
-                            GUI.getLoggerFrame().log("ERROR...."+netEx.getMessage());
                             Monitor.this.successful = false;
-                            Monitor.this.error = new gmailmonitor.beans.Error(netEx.getMessage(), netEx.getClass());
+                            Monitor.this.error = new gmailmonitor.beans.Error(netEx.getMessage(),"Network issues..", netEx.getClass());
+                            GUI.getLoggerFrame().log(Monitor.this.error.toString());
                         }
 
                     }
@@ -141,16 +142,16 @@ public class Monitor extends TimerTask {
             });
 
         } catch (MessagingException mse) {
-            GUI.getLoggerFrame().log("ERROR...."+mse.getMessage());
-            Monitor.this.successful = false;
-            Monitor.this.error = new gmailmonitor.beans.Error("OOPS!! There was a problem. Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", mse.getClass());
+             Monitor.this.successful = false;
+            Monitor.this.error = new gmailmonitor.beans.Error(mse.getMessage(),"OOPS!! There was a problem. Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", mse.getClass());
+            GUI.getLoggerFrame().log(Monitor.this.error.toString());
 //            mse.printStackTrace();
         } 
         
         catch (Exception e) {
-            GUI.getLoggerFrame().log("Exception...."+e.getMessage());
             Monitor.this.successful = false;
-            Monitor.this.error = new gmailmonitor.beans.Error("Keep Calm! Such things happen sometimes. Please restart the application.", e.getClass());
+            Monitor.this.error = new gmailmonitor.beans.Error(e.getMessage(),"Keep Calm! Such things happen sometimes. Please restart the application.", e.getClass());
+            GUI.getLoggerFrame().log(Monitor.this.error.toString());
         } finally {
             return Monitor.this.successful;
         }

@@ -13,11 +13,11 @@ public class Error {
     private String humanReadableErrorMessage;
     private Class exceptionClass;
     
-    public Error(final String errorMessage,final Class exceptionClass) {
+    public Error(final String errorMessage,String humanReadableErrorMessage,final Class exceptionClass) {
         
         this.errorMessage=errorMessage;
         this.exceptionClass=exceptionClass;
-        this.humanReadableErrorMessage = errorMessage;
+        this.humanReadableErrorMessage = humanReadableErrorMessage;
     }
 
     public String getErrorMessage() {
@@ -36,6 +36,11 @@ public class Error {
         this.humanReadableErrorMessage = humanReadableErrorMessage;
     }
     
+    @Override
+    public String toString(){
+        return ("Technical Error - "+errorMessage+":"+"Readable Error- "+humanReadableErrorMessage);
+    }
     
+   
     
 }
