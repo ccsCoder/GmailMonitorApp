@@ -18,6 +18,8 @@ import java.awt.TrayIcon;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -405,12 +407,21 @@ public class GUI extends javax.swing.JFrame {
 
 
             //Now persist the things in properties file.
-            PropertyFileWriter.writeToPropertyFile("host", this.jHostCombo.getSelectedItem().toString().equals("gMail") ? "imap.gmail.com" : "imap.yahoo.com");
-            PropertyFileWriter.writeToPropertyFile("username", this.jTextUsername.getText());
-            PropertyFileWriter.writeToPropertyFile("password", new String(this.jPassword1.getPassword()));
-            PropertyFileWriter.writeToPropertyFile("folder", this.jTextInboxName.getText());
-            PropertyFileWriter.writeToPropertyFile("sender", this.jTextSender.getText());
-            PropertyFileWriter.writeToPropertyFile("subject", this.jTextSubject.getText());
+            Map <String,String> propValues = new HashMap<String,String>();
+            propValues.put("host", this.jHostCombo.getSelectedItem().toString().equals("gMail") ? "imap.gmail.com" : "imap.yahoo.com");
+            propValues.put("username",this.jTextUsername.getText());
+            propValues.put("password",new String(this.jPassword1.getPassword()));
+            propValues.put("folder",this.jTextInboxName.getText());
+            propValues.put("sender",this.jTextSender.getText());
+            propValues.put("subject",this.jTextSubject.getText());
+            PropertyFileWriter.writeToPropertyFile(propValues);
+            
+//            PropertyFileWriter.writeToPropertyFile("host", this.jHostCombo.getSelectedItem().toString().equals("gMail") ? "imap.gmail.com" : "imap.yahoo.com");
+//            PropertyFileWriter.writeToPropertyFile("username", this.jTextUsername.getText());
+//            PropertyFileWriter.writeToPropertyFile("password", new String(this.jPassword1.getPassword()));
+//            PropertyFileWriter.writeToPropertyFile("folder", this.jTextInboxName.getText());
+//            PropertyFileWriter.writeToPropertyFile("sender", this.jTextSender.getText());
+//            PropertyFileWriter.writeToPropertyFile("subject", this.jTextSubject.getText());
 
             this.initSystemTray();
             //Now Initialize the Gmail Monitor.

@@ -6,17 +6,30 @@ package gmailmonitor.utils;
 
 import gmailmonitor.gui.GUI;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
@@ -28,6 +41,7 @@ public class PropertyFileWriter {
     public final static Properties CONNECTION_PROPERTIES = new Properties();
     //private static File propFile;
     private static File f;
+    private static ResourceBundle rb;
     
     static {
         try {
@@ -42,7 +56,8 @@ public class PropertyFileWriter {
         try {
             CONNECTION_PROPERTIES.setProperty(propertyName, propertyValue);
             //PropertyFileWriter.class.getResource("/resources/connections.properties").
-            CONNECTION_PROPERTIES.store(new FileOutputStream(f), null);
+            CONNECTION_PROPERTIES.store(new OutputStreamWriter(new FileOutputStream(f),"UTF-8"), null);
+            
             //System.out.println("Successfully Saved to property file:"+propertyName+" - "+propertyValue);
             GUI.getLoggerFrame().log("Wrote to property file:"+propertyName+" - "+propertyValue);
         } catch (Exception ex) {
@@ -52,7 +67,7 @@ public class PropertyFileWriter {
     
     private static void createPropertyFileIfAbsent() {
         
-        FileWriter fw=null;
+//        FileWriter fw=null;
         try {
             f = new File(System.getProperty("user.home")+File.separatorChar+PROPERTY_FILE_NAME);
             if (f.exists()) {
@@ -61,21 +76,28 @@ public class PropertyFileWriter {
                 return;
             }
             //create the stuff.
+            rb = ResourceBundle.getBundle("resources/init", Locale.US);
+            List<String> allStrings = new ArrayList<String>();
+            for(String s: rb.keySet()) {
+                allStrings.add(new String((s+"="+rb.getString(s)).getBytes("UTF-8")));
+            }
             GUI.getLoggerFrame().log("Warning! Config does not exist. Creating at:"+System.getProperty("user.home")+File.separatorChar+PROPERTY_FILE_NAME);
             System.out.println("Warning! Config does not exist. Creating at:"+System.getProperty("user.home")+File.separatorChar+PROPERTY_FILE_NAME);
             f.createNewFile();
-            fw = new FileWriter(f);
-            fw.write(StringEscapeUtils.escapeHtml4(GeneralUtils.CONFIG_FILE_TEXT).replace("&amp;", "&"));
-            fw.flush();
+            
+//            System.out.println(Charset.defaultCharset());
+            
+            FileUtils.writeLines(f,"UTF-8",allStrings);
             
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, "We cannot create working file in location:"+System.getProperty("user.home")+"\n Exiting!", "OOPS!", JOptionPane.ERROR_MESSAGE);
             GUI.getLoggerFrame().log("ERROR!!"+ex.getMessage());
-            try {
-                fw.close();
-            } catch (IOException ex1) {
-                //swallow
-            }
+//            ex.printStackTrace();
+//            try {
+////                fw.close();
+//            } catch (Exception ex1) {
+//                //swallow
+//            }
             
         }
         catch (Exception e) {
@@ -88,13 +110,39 @@ public class PropertyFileWriter {
 
     public static void loadProperties() throws IOException {
         createPropertyFileIfAbsent();
-        CONNECTION_PROPERTIES.load(new FileReader(f));
+        InputStream inputStream = new FileInputStream(f);
+        Reader reader = new InputStreamReader(inputStream, "UTF-8");
+        CONNECTION_PROPERTIES.load(reader);
         System.out.println("Loaded Properties...");
         //JOptionPane.showMessageDialog(null,);
-//        GUI.getLoggerFrame().log("Loaded the Properties file...");
+        GUI.getLoggerFrame().log("Loaded the Properties file...");
+        inputStream.close();
     }
     
     public static void main(String[] args) {
         System.out.println(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password"));
+        
+    }
+
+    public static void writeToPropertyFile(Map<String, String> propValues) {
+        try {
+            List<String> allStrings = new ArrayList<String>();
+            for(String key:propValues.keySet()) {
+                allStrings.add(new String((key+"="+propValues.get(key)).getBytes("UTF-8")));
+            }
+            allStrings.add(new String( ("Number_of_Agent="+rb.getString("Number_of_Agent")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT2_PART2="+rb.getString("SPARK_AGENT2_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT2_PART1="+rb.getString("SPARK_AGENT2_PART1")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT1_PART2="+rb.getString("SPARK_AGENT1_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT1_PART1="+rb.getString("SPARK_AGENT1_PART1")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT3_PART2="+rb.getString("SPARK_AGENT3_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT3_PART1="+rb.getString("SPARK_AGENT3_PART1")).getBytes("UTF-8")));
+            
+            FileUtils.writeLines(f, "UTF-8", allStrings);
+            
+        }
+        catch(Exception e) {
+            
+        }
     }
 }
