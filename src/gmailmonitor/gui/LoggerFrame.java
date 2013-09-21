@@ -145,7 +145,6 @@ public class LoggerFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonClearTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonClearTextActionPerformed
-        // TODO add your handling code here:
         if (JOptionPane.YES_OPTION==JOptionPane.showConfirmDialog(null, "Are you sure you want to clear Activity Log ?", "Question",JOptionPane.YES_NO_OPTION , JOptionPane.QUESTION_MESSAGE)) {
             this.jTextAreaLog.setText("");
         }
@@ -165,7 +164,6 @@ public class LoggerFrame extends javax.swing.JFrame {
     private void jButtonSaveToFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveToFileActionPerformed
         FileWriter fw = null;
         try {
-            // TODO add your handling code here:
             if (this.fileChooser.showOpenDialog(null)==JFileChooser.APPROVE_OPTION) {
                 DateFormat df = DateFormat.getDateInstance(DateFormat.DEFAULT);
                 
