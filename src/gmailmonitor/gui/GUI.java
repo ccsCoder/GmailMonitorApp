@@ -35,6 +35,7 @@ public class GUI extends javax.swing.JFrame {
     private SystemTray tray;
     private static TrayIcon trayIcon;
     private static LoggerFrame loggerFrame;
+    private Monitor gmailTimerTask;
     
     /**
      * Creates new form GUI
@@ -429,8 +430,11 @@ public class GUI extends javax.swing.JFrame {
 //            PropertyFileWriter.writeToPropertyFile("subject", this.jTextSubject.getText());
 
             this.initSystemTray();
+            
+            //Stop previously running monitor
+            this.stopGmailMonitor();
+            
             //Now Initialize the Gmail Monitor.
-            //TODO: Uncomment this
             this.initGmailMonitor();
             
         } catch (AWTException ex) {
@@ -516,7 +520,10 @@ public class GUI extends javax.swing.JFrame {
                 GUI gui = new GUI();
                 gui.setVisible(true);
                 gui.centerWindow();
-                if (!gui.checkFirstTimeHit()) {
+                if (PropertyFileWriter.wasErroredInPreviousRun()) {
+                    GeneralUtils.displayMessage("Something wasn't quite right in the previous run. Please recheck config!", GeneralUtils.FAILURE_MESSAGE, gui.jLabelNotification, gui.jPanelNotificationPanel);
+                }
+                else if (!gui.checkFirstTimeHit()) {
                     try {
                         //if returning to the app, go to SysTray Directly.
                         gui.initSystemTray();
@@ -629,6 +636,15 @@ public class GUI extends javax.swing.JFrame {
     }
     
     /**
+     * Method to stop the Monitor class...
+     */
+    private void stopGmailMonitor() {
+        if (this.gmailTimerTask!=null)
+            this.gmailTimerTask.setKeepMonitoring(false);
+        this.gmailTimerTask = null;
+    }
+    
+    /**
      * Method to initialize the Monitor Class...
      */
     private void initGmailMonitor() {
@@ -638,15 +654,19 @@ public class GUI extends javax.swing.JFrame {
         String password=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("password");
         String folder=PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("folder");
         //Create the task
-        Monitor gmailTimerTask = new Monitor(host,userName,password,folder);
+        gmailTimerTask = new Monitor(host,userName,password,folder);
         if(gmailTimerTask.startMonitor()==false) {
             //This means that an Error has occured.
             System.out.println("Houston! We have a problem !");
             System.out.println(gmailTimerTask.getError().getHumanReadableErrorMessage());
             JOptionPane.showMessageDialog(null, gmailTimerTask.getError().getHumanReadableErrorMessage(), "Something Went Wrong!", JOptionPane.ERROR_MESSAGE);
             GUI.getLoggerFrame().log(gmailTimerTask.getError().getHumanReadableErrorMessage());
+            //Set the error flag.
+            PropertyFileWriter.setErrorFlagFile();
             System.exit(1); //bail out
         }
+        //Remove the property flag file if present.
+        PropertyFileWriter.removeErrorFlagFile();
         System.out.println("Gmail Monitoring Task will start in 1 second...");
         GUI.getLoggerFrame().log("Gmail Monitoring Task will start in 1 second...");
         monitoringTimer.schedule(gmailTimerTask, 1000);
