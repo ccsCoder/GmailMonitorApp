@@ -95,6 +95,11 @@ public class GUI extends javax.swing.JFrame {
         jLabelNotification = new javax.swing.JLabel();
 
         setTitle("Configuration Screen");
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jPanel1.setBackground(new java.awt.Color(204, 204, 204));
 
@@ -216,12 +221,12 @@ public class GUI extends javax.swing.JFrame {
                         .addComponent(jPassword2, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
-                            .addComponent(jLabel1))
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(137, 137, 137)
+                                .addGap(109, 109, 109)
                                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jTextUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jHostCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 189, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -261,7 +266,7 @@ public class GUI extends javax.swing.JFrame {
 
         jTextSubject.setText("Call from");
 
-        jTextSender.setText("justdial.com");
+        jTextSender.setText(PropertyFileWriter.CONNECTION_PROPERTIES.getProperty("sender"));
 
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel6.setText("Folder to Monitor:");
@@ -425,6 +430,7 @@ public class GUI extends javax.swing.JFrame {
 
             this.initSystemTray();
             //Now Initialize the Gmail Monitor.
+            //TODO: Uncomment this
             this.initGmailMonitor();
             
         } catch (AWTException ex) {
@@ -436,7 +442,6 @@ public class GUI extends javax.swing.JFrame {
 
     private void jCancelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCancelButtonActionPerformed
         try {
-            // TODO add your handling code here:
             this.initSystemTray();
         } catch (AWTException ex) {
             System.out.println("OOPS! There was a problem in initializing the Tray!");
@@ -445,26 +450,30 @@ public class GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_jCancelButtonActionPerformed
 
     private void jPassword1FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPassword1FocusGained
-        // TODO add your handling code here:
         GeneralUtils.displayMessage("<html><p style='font-size:10pt'>Enter Application Specific Password if you have enabled 2 STEP VERIFICATION for your Account.</p>"
                 + "<p style='font-size:10pt'> "
                 + "For more Info: https://support.google.com/accounts/answer/185833?hl=en </p></html>", GeneralUtils.WARNING_MESSAGE, this.jLabelNotification, this.jPanelNotificationPanel);
     }//GEN-LAST:event_jPassword1FocusGained
 
     private void jPassword1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPassword1FocusLost
-        // TODO add your handling code here:
         GeneralUtils.displayMessage("We just need a few details to get Started!", GeneralUtils.SUCCESS_MESSAGE, this.jLabelNotification, this.jPanelNotificationPanel);
     }//GEN-LAST:event_jPassword1FocusLost
 
     private void jPassword2FocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPassword2FocusGained
-        // TODO add your handling code here:
         this.jPassword1FocusGained(evt);
     }//GEN-LAST:event_jPassword2FocusGained
 
     private void jPassword2FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jPassword2FocusLost
-        // TODO add your handling code here:
         this.jPassword1FocusLost(evt);
     }//GEN-LAST:event_jPassword2FocusLost
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        try {
+            this.initSystemTray();
+        } catch (AWTException ex) {
+            GUI.getLoggerFrame().log("Exception while minimizing to system tray...!"+ex.getMessage());
+        }
+    }//GEN-LAST:event_formWindowClosing
     
     private void centerWindow() {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();

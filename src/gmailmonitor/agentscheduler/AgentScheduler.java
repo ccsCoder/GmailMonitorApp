@@ -93,13 +93,10 @@ public class AgentScheduler extends TimerTask {
 				 
                  }
             } catch (NetworkException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (ResponseException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

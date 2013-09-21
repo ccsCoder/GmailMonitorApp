@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FileUtils;
 
-
 /**
  *
  * @author CodeBeast
@@ -136,6 +135,7 @@ public class PropertyFileWriter {
             allStrings.add(new String( ("SPARK_AGENT6_PART1="+rb.getString("SPARK_AGENT6_PART1")).getBytes("UTF-8")));
             
             FileUtils.writeLines(f, "UTF-8", allStrings);
+            loadProperties();
             
         }
         catch(Exception e) {
