@@ -23,15 +23,18 @@ public class MultipartEmailReader {
     public static void readMultipartMessage(Message msg) throws IOException, MessagingException, NetworkException, ResponseException {        
         Object mailContent = msg.getContent();
         Timer agentThreadTimer = new Timer("AgentThread");
-        ArrayList<String> num = new ArrayList<String>();
-
+        //ArrayList<String> num = new ArrayList<String>();
+        PersonDetails personDetailed;
+        
+        
         if (mailContent instanceof Multipart) {
             
             Multipart mp = (Multipart) mailContent;
-            num = ParsingInbox.patternMatch(mp);
+            personDetailed = ParsingInbox.patternMatch(mp);
+            
 
-            for (int j = 0; j < num.size(); j++) {                
-                AgentScheduler agent = new AgentScheduler((num.get(j)).substring(3, 13));
+            for (int j = 0; j < personDetailed.getNumber().size(); j++) { 
+                AgentScheduler agent = new AgentScheduler((personDetailed.getNumber().get(j)).substring(3, 13),personDetailed.getName(),personDetailed.getLocation());
                 agentThreadTimer.schedule(agent, 5000);
             }
 

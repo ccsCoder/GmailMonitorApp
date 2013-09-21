@@ -160,6 +160,12 @@ public class PropertyFileWriter {
             allStrings.add(new String( ("SPARK_AGENT1_PART1="+rb.getString("SPARK_AGENT1_PART1")).getBytes("UTF-8")));
             allStrings.add(new String( ("SPARK_AGENT3_PART2="+rb.getString("SPARK_AGENT3_PART2")).getBytes("UTF-8")));
             allStrings.add(new String( ("SPARK_AGENT3_PART1="+rb.getString("SPARK_AGENT3_PART1")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT4_PART2="+rb.getString("SPARK_AGENT4_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT4_PART1="+rb.getString("SPARK_AGENT4_PART1")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT5_PART2="+rb.getString("SPARK_AGENT5_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT5_PART1="+rb.getString("SPARK_AGENT5_PART1")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT6_PART2="+rb.getString("SPARK_AGENT6_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT6_PART1="+rb.getString("SPARK_AGENT6_PART1")).getBytes("UTF-8")));
             
             FileUtils.writeLines(f, "UTF-8", allStrings);
             loadProperties();
