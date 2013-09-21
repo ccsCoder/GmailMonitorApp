@@ -20,11 +20,16 @@ import java.util.TimerTask;
 public class AgentScheduler extends TimerTask {
 
     private String customerPhoneNumber = null;
+    private String customerName = null;
+    private String customerLocation = null;
     
-    public AgentScheduler(String userNum) {
+    
+    public AgentScheduler(String userNum,String userName,String userLocation) {
         
         GUI.getLoggerFrame().log("Spawned a new Scheduler Thread for Phone Number:"+userNum);
         this.customerPhoneNumber = userNum;
+        this.customerName= userName;
+        this.customerLocation=userLocation;
     }
     
     
@@ -42,7 +47,7 @@ public class AgentScheduler extends TimerTask {
         while (!callAnswered) {
             try {
                 
-                 GUI.getLoggerFrame().log("Started calling agent with number:" + currentAgent + ": to phone " + customerPhoneNumber);
+                 GUI.getLoggerFrame().log("Started calling agent with number:" + currentAgent + ":to "+customerName+"from "+customerLocation+" to phone " + customerPhoneNumber);
                 while (!callAnswered && currentAgent > 0) { //countdown to the agent number
 //                    _sparkResponse = Integer.parseInt(spark.uRLConnectionReader(userPhone, currentAgent));
                     sparkResponseCode = Integer.parseInt(spark.uRLConnectionReader(customerPhoneNumber, currentAgent));
@@ -52,7 +57,7 @@ public class AgentScheduler extends TimerTask {
                     switch(sparkResponseCode) {
                         case 0: //SUCCESS
                             callAnswered=true;
-                             GUI.getTrayIcon().displayMessage("Gmail Monitor", "Call Answered Successfully to number"+customerPhoneNumber+" by agent-"+currentAgent, TrayIcon.MessageType.INFO);
+                             GUI.getTrayIcon().displayMessage("Gmail Monitor", "Call Answered by "+customerName+ "from"+customerLocation+" Successfully to number: "+customerPhoneNumber+" by agent-"+currentAgent, TrayIcon.MessageType.INFO);
                              GUI.getLoggerFrame().log("Call Answered Successfully by Agent number!-"+currentAgent);
                              break;
                         case 112: //Agent is busy, move to next agent.
@@ -75,7 +80,7 @@ public class AgentScheduler extends TimerTask {
                             callAnswered=true;      //No need to keep running this thread anymore.
                             break;
                         default:   //unknown error
-                            GUI.getTrayIcon().displayMessage("Gmail Monitor", "Please contact to Spark guys to dial number"+customerPhoneNumber+" by agent-"+currentAgent, TrayIcon.MessageType.ERROR);
+                            GUI.getTrayIcon().displayMessage("Gmail Monitor", "Please contact to Spark guys to dial number"+customerPhoneNumber+"for "+customerName+", "+customerLocation+" by agent-"+currentAgent, TrayIcon.MessageType.ERROR);
                             GUI.getLoggerFrame().log("Mayday, Mayday! He's dead Jim! And we have no Idea why. Maybe you should get hold of those Spark guys!");
                             callAnswered=true;
                             break;
@@ -105,6 +110,6 @@ public class AgentScheduler extends TimerTask {
        
         GUI.getLoggerFrame().log("Will Schedule Call for -"+userPhone+" in a while...");
         //schedule it for 2 minutes from now... and get the hell out of here...
-        new Timer().schedule(new AgentScheduler(customerPhoneNumber),   120000);
+        new Timer().schedule(new AgentScheduler(customerPhoneNumber,customerName,customerLocation),   120000);
     }
 }

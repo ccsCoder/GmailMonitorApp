@@ -8,29 +8,20 @@ import gmailmonitor.gui.GUI;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
+
 
 /**
  *
@@ -137,6 +128,12 @@ public class PropertyFileWriter {
             allStrings.add(new String( ("SPARK_AGENT1_PART1="+rb.getString("SPARK_AGENT1_PART1")).getBytes("UTF-8")));
             allStrings.add(new String( ("SPARK_AGENT3_PART2="+rb.getString("SPARK_AGENT3_PART2")).getBytes("UTF-8")));
             allStrings.add(new String( ("SPARK_AGENT3_PART1="+rb.getString("SPARK_AGENT3_PART1")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT4_PART2="+rb.getString("SPARK_AGENT4_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT4_PART1="+rb.getString("SPARK_AGENT4_PART1")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT5_PART2="+rb.getString("SPARK_AGENT5_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT5_PART1="+rb.getString("SPARK_AGENT5_PART1")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT6_PART2="+rb.getString("SPARK_AGENT6_PART2")).getBytes("UTF-8")));
+            allStrings.add(new String( ("SPARK_AGENT6_PART1="+rb.getString("SPARK_AGENT6_PART1")).getBytes("UTF-8")));
             
             FileUtils.writeLines(f, "UTF-8", allStrings);
             
