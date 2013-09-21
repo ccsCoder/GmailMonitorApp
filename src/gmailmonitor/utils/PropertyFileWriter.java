@@ -28,6 +28,7 @@ import org.apache.commons.io.FileUtils;
  */
 public class PropertyFileWriter {
     private final static String PROPERTY_FILE_NAME="configuration.properties";
+    private final static String ERROR_FILE_NAME="errored";
     public final static Properties CONNECTION_PROPERTIES = new Properties();
     //private static File propFile;
     private static File f;
@@ -40,6 +41,34 @@ public class PropertyFileWriter {
         } catch (IOException ex) {
             GUI.getLoggerFrame().log("ERROR!"+ex.getMessage());
         }
+    }
+    
+    /**
+     * MEthod to delete the error flag file from USER_HOME
+     */
+    public static void removeErrorFlagFile() {
+        File temp = new File(System.getProperty("user.home")+File.separatorChar+ERROR_FILE_NAME);
+        if (temp.exists())
+            temp.delete();
+    }
+    
+    /**
+     * Method to create the error flag file in USER_HOME
+     */
+    public static void setErrorFlagFile() {
+        try {
+            FileUtils.touch(new File(System.getProperty("user.home")+File.separatorChar+ERROR_FILE_NAME));
+        } catch (IOException ex) {
+            GUI.getLoggerFrame().log("ERROR! While setting error flag file...: "+ex.getMessage());
+        }
+    }
+    
+    /**
+     * Method to find if the error file existed.
+     * @return 
+     */
+    public static boolean wasErroredInPreviousRun() {
+        return new File(System.getProperty("user.home")+File.separatorChar+ERROR_FILE_NAME).exists();
     }
     
     public static void writeToPropertyFile(final String propertyName,final String propertyValue) {
@@ -119,7 +148,11 @@ public class PropertyFileWriter {
             List<String> allStrings = new ArrayList<String>();
             for(String key:propValues.keySet()) {
                 allStrings.add(new String((key+"="+propValues.get(key)).getBytes("UTF-8")));
+                System.out.println(key+":"+propValues.get(key));
+                
             }
+            if(rb==null)
+                rb = ResourceBundle.getBundle("resources/init", Locale.US);
             allStrings.add(new String( ("Number_of_Agent="+rb.getString("Number_of_Agent")).getBytes("UTF-8")));
             allStrings.add(new String( ("SPARK_AGENT2_PART2="+rb.getString("SPARK_AGENT2_PART2")).getBytes("UTF-8")));
             allStrings.add(new String( ("SPARK_AGENT2_PART1="+rb.getString("SPARK_AGENT2_PART1")).getBytes("UTF-8")));
@@ -133,7 +166,8 @@ public class PropertyFileWriter {
             
         }
         catch(Exception e) {
-            
+            e.printStackTrace();
+            GUI.getLoggerFrame().log("ERROR! Cannot write to Property File..."+e.getMessage());
         }
     }
 }
