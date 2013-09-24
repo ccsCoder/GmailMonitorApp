@@ -42,14 +42,11 @@ public class ParsingInbox {
 			}
 			 
                         for(String m: matchName) {
-                            System.out.println("each line : "+m);
                             if( (m.toLowerCase()).contains("caller name"))
                             {
                               int startIndex=m.indexOf(":");
                               int lastIndex=(m.toLowerCase()).indexOf("caller requirement");
-                              System.out.println("Index:"+startIndex+":"+lastIndex);
                               nameLocation=m.substring(startIndex, lastIndex);
-                              System.out.println("name with location :"+nameLocation);
                               nameLocation=nameLocation.replace("*","");
                               name=nameLocation.split("from");
                               personD=new PersonDetails(name[0],name[1],number);
