@@ -21,6 +21,10 @@ public class PersonDetails {
         this.number = number;
     }
 
+    public PersonDetails() {
+        
+    }
+
     public String getName() {
         return name;
     }

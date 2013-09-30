@@ -57,7 +57,7 @@ public class AgentScheduler extends TimerTask {
                     switch(sparkResponseCode) {
                         case 0: //SUCCESS
                             callAnswered=true;
-                             GUI.getTrayIcon().displayMessage("Gmail Monitor", "Call Answered by "+customerName+ "from"+customerLocation+" Successfully to number: "+customerPhoneNumber+" by agent-"+currentAgent, TrayIcon.MessageType.INFO);
+                             GUI.getTrayIcon().displayMessage("Gmail Monitor", "Call Made to: "+customerName+ ", Location:"+customerLocation+", Number: "+customerPhoneNumber+" by Agent: "+currentAgent, TrayIcon.MessageType.INFO);
                              GUI.getLoggerFrame().log("Call Answered Successfully by Agent number!-"+currentAgent);
                              break;
                         case 112: //Agent is busy, move to next agent.
@@ -80,8 +80,9 @@ public class AgentScheduler extends TimerTask {
                             callAnswered=true;      //No need to keep running this thread anymore.
                             break;
                         default:   //unknown error
-                            GUI.getTrayIcon().displayMessage("Gmail Monitor", "Please contact to Spark guys to dial number"+customerPhoneNumber+"for "+customerName+", "+customerLocation+" by agent-"+currentAgent, TrayIcon.MessageType.ERROR);
+                            GUI.getTrayIcon().displayMessage("Gmail Monitor", "Something REALLY, REALLY went wrong! Get hold of those Spark People!!!", TrayIcon.MessageType.ERROR);
                             GUI.getLoggerFrame().log("Mayday, Mayday! He's dead Jim! And we have no Idea why. Maybe you should get hold of those Spark guys!");
+                            GUI.getLoggerFrame().log("ERROR! while trying to call:"+customerPhoneNumber+" by agent-"+currentAgent);
                             callAnswered=true;
                             break;
                     }

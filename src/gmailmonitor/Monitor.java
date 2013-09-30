@@ -118,23 +118,28 @@ public class Monitor extends TimerTask {
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error(uhe.getMessage(),"Connection Problem! Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", uhe.getClass());
                             GUI.getLoggerFrame().log(Monitor.this.error.toString());
+                            uhe.printStackTrace();
                         } catch (IOException ioex) {
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error(ioex.getMessage(),"Problem Reading gMail Info! Verify that-\n1.You are connected to the Internet.", ioex.getClass());
                             GUI.getLoggerFrame().log(Monitor.this.error.toString());
+                            ioex.printStackTrace();
                         } catch (MessagingException mex) {
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error(mex.getMessage(),"gMail is Acting up! :(", mex.getClass());
                             GUI.getLoggerFrame().log(Monitor.this.error.toString());
+                            mex.printStackTrace();
                         } catch (ResponseException respEx) {
                              Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error(respEx.getMessage(),"Not getting response ...", respEx.getClass());
                             GUI.getLoggerFrame().log(Monitor.this.error.toString());
+                            respEx.printStackTrace();
                              
                         } catch (NetworkException netEx) {
                             Monitor.this.successful = false;
                             Monitor.this.error = new gmailmonitor.beans.Error(netEx.getMessage(),"Network issues..", netEx.getClass());
                             GUI.getLoggerFrame().log(Monitor.this.error.toString());
+                            netEx.printStackTrace();
                         }
 
                     }
@@ -145,13 +150,14 @@ public class Monitor extends TimerTask {
              Monitor.this.successful = false;
             Monitor.this.error = new gmailmonitor.beans.Error(mse.getMessage(),"OOPS!! There was a problem. Verify that-\n1.You are connected to the Internet.\n2.Account Details are correct in the Configuration Screen", mse.getClass());
             GUI.getLoggerFrame().log(Monitor.this.error.toString());
-//            mse.printStackTrace();
+            mse.printStackTrace();
         } 
         
         catch (Exception e) {
             Monitor.this.successful = false;
             Monitor.this.error = new gmailmonitor.beans.Error(e.getMessage(),"Keep Calm! Such things happen sometimes. Please restart the application.", e.getClass());
             GUI.getLoggerFrame().log(Monitor.this.error.toString());
+            e.printStackTrace();
         } finally {
             return Monitor.this.successful;
         }

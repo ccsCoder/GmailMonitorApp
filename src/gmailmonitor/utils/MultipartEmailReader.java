@@ -28,14 +28,14 @@ public class MultipartEmailReader {
         
         
         if (mailContent instanceof Multipart) {
-            
+            System.out.println("Inside Multipart part");
             Multipart mp = (Multipart) mailContent;
             personDetailed = ParsingInbox.patternMatch(mp);
             
 
             for (int j = 0; j < personDetailed.getNumber().size(); j++) { 
                 AgentScheduler agent = new AgentScheduler((personDetailed.getNumber().get(j)).substring(3, 13),personDetailed.getName(),personDetailed.getLocation());
-                agentThreadTimer.schedule(agent, 5000);
+                agentThreadTimer.schedule(agent, 10000);
             }
 
         }
