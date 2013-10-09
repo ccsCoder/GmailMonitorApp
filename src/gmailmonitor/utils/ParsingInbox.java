@@ -41,9 +41,10 @@ public class ParsingInbox {
                         
                         int startIndex=allText.toLowerCase().indexOf("caller name");
                         int lastIndex=(allText.toLowerCase()).indexOf("caller requirement");
-                        nameLocation=allText.substring(startIndex, lastIndex);
-                        nameLocation=nameLocation.replace("*","");
-                        nameLocation=nameLocation.replace(":","");
+                        nameLocation=allText.substring(startIndex, lastIndex).replace("*","").replace(":","");
+                        //can be replaced by a single line
+//                        nameLocation=nameLocation;
+//                        nameLocation=nameLocation.replace(":","");
                         name=nameLocation.split("from");
                         name[0]=name[0]==null?"Unknown":name[0];
                         name[1]=name[1]==null?"Unknown":name[1];

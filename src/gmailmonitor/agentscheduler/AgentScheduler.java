@@ -95,10 +95,17 @@ public class AgentScheduler extends TimerTask {
                  }
             } catch (NetworkException e) {
                 e.printStackTrace();
+                GUI.getLoggerFrame().log("ERROR!: In Scheduler Code: "+e.getMessage());
             } catch (IOException e) {
                 e.printStackTrace();
+                GUI.getLoggerFrame().log("ERROR!: In Scheduler Code: "+e.getMessage());
             } catch (ResponseException e) {
                 e.printStackTrace();
+                GUI.getLoggerFrame().log("ERROR!: In Scheduler Code: "+e.getMessage());
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                GUI.getLoggerFrame().log("ERROR!: In Scheduler Code: "+e.getMessage());
             }
 
         }
