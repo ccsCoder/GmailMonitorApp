@@ -31,40 +31,33 @@ public class ParsingInbox {
             //System.out.println("Inside Try"+mp.getCount());
             GUI.getLoggerFrame().log("Got these number of body parts:"+mp.getCount());
 		for(int i=0;i<mp.getCount()-1;i++) {
-                    //System.out.println("Inside Loop:");
+                    
 			bp= mp.getBodyPart(i);
                         
 			Matcher matcher = null;//pattern.matcher(bp.getContent().toString());
                         
                         br = new BufferedReader(new InputStreamReader(bp.getInputStream()));
                         String allText=bp.getContent().toString();
-                        //System.out.println(allText);
-                        String[] matchName = allText.split("\\r?\\n");
-                        for(String m: matchName) {
-                            System.out.println(m);
-                            if( (m.toLowerCase()).contains("caller name"))
-                            {
-                              int startIndex=m.indexOf(":");
-                              int lastIndex=(m.toLowerCase()).indexOf("caller requirement");
-                              nameLocation=m.substring(startIndex, lastIndex);
-                              nameLocation=nameLocation.replace("*","");
-                              name=nameLocation.split("from");
-                              name[0]=name[0]==null?"Unknown":name[0];
-                              name[1]=name[1]==null?"Unknown":name[1];
-                              personD.setName(name[0]);
-                              personD.setLocation(name[1]);
-                              
-                            }
-                            else {
-                                matcher = pattern.matcher(m);
-                                String num=null;
-                                while (matcher.find()) {
-                                    num = matcher.group();
-                                    GUI.getLoggerFrame().log("Got this number:"+num);
-                                    number.add(num);
-                                }
-                            }
-                         }
+                        
+                        int startIndex=allText.toLowerCase().indexOf("caller name");
+                        int lastIndex=(allText.toLowerCase()).indexOf("caller requirement");
+                        nameLocation=allText.substring(startIndex, lastIndex);
+                        nameLocation=nameLocation.replace("*","");
+                        nameLocation=nameLocation.replace(":","");
+                        name=nameLocation.split("from");
+                        name[0]=name[0]==null?"Unknown":name[0];
+                        name[1]=name[1]==null?"Unknown":name[1];
+                        personD.setName(name[0]);
+                        personD.setLocation(name[1]);
+                                                                
+                       //Matcher for matching the phone numberstart with +91
+                        matcher = pattern.matcher(allText);
+                        String num=null;
+                        while (matcher.find()) {
+                             num = matcher.group();
+                             GUI.getLoggerFrame().log("Got this number:"+num);
+                             number.add(num);
+                           }
                         personD.setNumber(number);
                         
                         //System.out.println("Total matched Number: "+number.toString()+" for Person: "+name[0]+" from : "+name[1]);
